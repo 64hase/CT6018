@@ -9,11 +9,14 @@ public class StackManager : MonoBehaviour
     public Stack stackster;
     int stackPos = 0;
 
+    //Debug - remove this later
+    private int spawnedElements = 0;
+
     /*[SerializeField]
     private StackElement elementToInstantiate;*/
 
-        //[SerializeField]
-        //private RectTransform content;
+    [SerializeField]
+    private RectTransform content;
 
         //(RectTransform)gameObject.transform;
 
@@ -27,13 +30,11 @@ public class StackManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        for (int k = stackster.Count; k<4; k++)
+        /*
+        for (int i = stackster.Count; i < 4; i++)
         {
-            //(GameObject)Instantiate(elementToInstantiate, content);
-            GameObject instantiatedStackElement = (GameObject)Instantiate(stackBase, new Vector3(stackBase.transform.position.x, stackBase.transform.position.y + stackster.Count, stackster.transform.position.z), stackster.transform.rotation);
-            //((RectTransform)instantiatedStackElement.transform).SetAsFirstSibling();
-            stackster.Push(instantiatedStackElement);
-        }
+            SpawnElement();
+        }*/
     }
 
     // Update is called once per frame
@@ -44,7 +45,7 @@ public class StackManager : MonoBehaviour
 
     public void PushButton()
     {
-        stackster.Push((GameObject)Instantiate(stackBase, new Vector3(stackBase.transform.position.x, stackBase.transform.position.y + stackster.Count, stackster.transform.position.z), stackster.transform.rotation));
+        SpawnElement();
         Debug.Log("I pushed an item on the stack");
     }
 
@@ -54,6 +55,18 @@ public class StackManager : MonoBehaviour
         temp = (GameObject)stackster.Pop();
         GameObject.Destroy(temp);
 
+    }
+
+    private void SpawnElement()
+    {
+        if (spawnedElements > 10)
+            return;
+
+        spawnedElements++;
+        GameObject instantiatedStackElement = Instantiate(stackBase, content);
+        instantiatedStackElement.name = "SpawnedElement_" + spawnedElements;
+        ((RectTransform)instantiatedStackElement.transform).SetAsFirstSibling();
+        stackster.Push(instantiatedStackElement);
     }
 
     //Task element

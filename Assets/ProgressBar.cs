@@ -20,17 +20,23 @@ public class ProgressBar : MonoBehaviour
     }
     [SerializeField]
     public Image ProgressFill;
-    private float AimMultiplier = 1.5F;
+    private float AimMultiplier = 2.5F;
     public Text ProgressText;
     private string ProgressTextString;
     public bool UseDefaults;
+    public GameObject PlayerTree;
+    public Mesh Tree_Stage01;
+    public Mesh Tree_Stage02;
+    public Mesh Tree_Stage03;
+    public int Stagenumber = 1;
+    public GameObject HatPlaceHolder;
     // Start is called before the first frame update
     private void Start()
     {
         if (UseDefaults == true)
         {
             Progress = 0;
-            ProgressAim = 20;
+            ProgressAim = 10;
         }
     }
 
@@ -49,7 +55,19 @@ public class ProgressBar : MonoBehaviour
         //Once player has reached their progress aim, the aim is updated via multiplication.
         if (Progress >= ProgressAim)
         {
+            Stagenumber = Stagenumber + 1;
+            //Checks which tree the player currently has and then updates to the next stage mesh accordingly.
             PlayerPrefs.SetFloat("ProgressAim", ProgressAim * AimMultiplier);
+            if (Stagenumber == 2)
+            {
+                PlayerTree.GetComponent<MeshFilter>().mesh = Tree_Stage02;
+                HatPlaceHolder.transform.position = HatPlaceHolder.transform.position + new Vector3(0, 1.2F, 0);
+            }
+            if (Stagenumber == 3)
+            {
+                PlayerTree.GetComponent<MeshFilter>().mesh = Tree_Stage03;
+                HatPlaceHolder.transform.position = new Vector3(0,0, 0.2F);
+            }
         }
     }
 }

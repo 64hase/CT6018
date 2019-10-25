@@ -492,6 +492,7 @@ MonoBehaviour:
   TaskPointValue: 2
   TaskElementBackground: {fileID: 4206682449747121993}
   TaskTextRef: {fileID: 4206682449072876851}
+  TaskPlaceHolderTextRef: {fileID: 4206682448049903821}
   TaskInputField: {fileID: 4206682448681873289}
   colorToAnimateBackgroundTo: {r: 0.4431373, g: 0.7058824, b: 0.41176474, a: 1}
 --- !u!1 &4206682449747121993

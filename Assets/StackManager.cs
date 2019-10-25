@@ -30,6 +30,8 @@ public class StackManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+
+
         /*
         for (int i = stackster.Count; i < 4; i++)
         {
@@ -59,14 +61,19 @@ public class StackManager : MonoBehaviour
 
     private void SpawnElement()
     {
-        if (spawnedElements > 10)
+        if (spawnedElements > 15)
+        {
+            Debug.Log("Stack limit has been reached!");
             return;
-
-        spawnedElements++;
-        GameObject instantiatedStackElement = Instantiate(stackBase, content);
-        instantiatedStackElement.name = "SpawnedElement_" + spawnedElements;
-        ((RectTransform)instantiatedStackElement.transform).SetAsFirstSibling();
-        stackster.Push(instantiatedStackElement);
+        }
+        else
+        {
+            spawnedElements++;
+            GameObject instantiatedStackElement = Instantiate(stackBase, content);
+            instantiatedStackElement.name = "SpawnedElement_" + spawnedElements;
+            ((RectTransform)instantiatedStackElement.transform).SetAsFirstSibling();
+            stackster.Push(instantiatedStackElement);
+        }
     }
 
     //Task element

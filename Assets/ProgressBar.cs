@@ -19,16 +19,26 @@ public class ProgressBar : MonoBehaviour
         set { PlayerPrefs.SetFloat(KEY_PROGRESSAIM, value); }
     }
     [SerializeField]
+    //For referencing the PrpgressFill Image used o the progress bar
     public Image ProgressFill;
+    //The multiplier applied to ProgressAim once it has been reached by the player
     private float AimMultiplier = 2.5F;
+    //Use for referencing ProgressText
     public Text ProgressText;
+    //Used to convert Text element to String to allow for Length calculation
     private string ProgressTextString;
+    //Allows for default values for progress/progressAim to be toggled On/Off
     public bool UseDefaults;
     public GameObject PlayerTree;
+    //For referencing Tree Stage 01 Mesh
     public Mesh Tree_Stage01;
+    //For referencing Tree Stage 02 Mesh
     public Mesh Tree_Stage02;
+    //For referencing Tree Stage 03 Mesh
     public Mesh Tree_Stage03;
+    //Stage number used to track the stage the player is currently on
     public int Stagenumber = 1;
+    //Used for referencing the HAT Placeholder empty gameobject
     public GameObject HatPlaceHolder;
     // Start is called before the first frame update
     private void Start()
@@ -58,11 +68,15 @@ public class ProgressBar : MonoBehaviour
             Stagenumber = Stagenumber + 1;
             //Checks which tree the player currently has and then updates to the next stage mesh accordingly.
             PlayerPrefs.SetFloat("ProgressAim", ProgressAim * AimMultiplier);
+
+            //If player's progress equates to stage 02 of the game, then update tree MeshFilter to stage02 mesh
             if (Stagenumber == 2)
             {
                 PlayerTree.GetComponent<MeshFilter>().mesh = Tree_Stage02;
                 HatPlaceHolder.transform.position = HatPlaceHolder.transform.position + new Vector3(0, 1.2F, 0);
             }
+
+            //If player's progress equates to stage 03 of the game, the update tree MeshFilter to stage03 mesh
             if (Stagenumber == 3)
             {
                 PlayerTree.GetComponent<MeshFilter>().mesh = Tree_Stage03;

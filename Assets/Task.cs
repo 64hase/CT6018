@@ -22,6 +22,11 @@ public class Task : MonoBehaviour
         button.onClick.AddListener(OnClick);
     }
 
+    private void onValueChanged()
+    {
+
+    }
+
     private void OnClick()
     {
         //Change the task background tint to green to indicate it has been completed
@@ -54,6 +59,6 @@ public class Task : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
 
         //Destroy the parent object of the task button, aka. the task element itself. 
-        Destroy(transform.parent.gameObject);
+        DestroyImmediate(transform.parent.gameObject, true);
     }
 }

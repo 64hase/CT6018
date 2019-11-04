@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Store_Item : MonoBehaviour
 {
+    [SerializeField]
     private int Hat01_Own;
     private int Hat01_Price;
     public Sprite Hat01_Image;
@@ -36,8 +37,10 @@ public class Store_Item : MonoBehaviour
     public Mesh Hat06;
 
     public int Button_Number;
-    private GameObject Hat;
-    private Button PurchaseItemButton;
+    public GameObject HatGameobject;
+    private Mesh Hat;
+    public Button PurchaseItemButton;
+    public bool ResetOwnership;
    // public Color SelectNormalColour;
     //public Color HighlightNormalColour;
     //public Color Pressed;
@@ -46,88 +49,104 @@ public class Store_Item : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        Hat01_Own = PlayerPrefs.GetInt("Hat01_Own");
-        Hat01_Price = 50;
+        Hat01_Own = PlayerPrefs.GetInt("Hat01_Own", 0);
+        Hat01_Price = 0;
         if (Button_Number == 1)
         {
             this.GetComponentInChildren<Image>().overrideSprite = Hat01_Image;
+            this.GetComponentInChildren<Text>().text = Hat01_Price.ToString();
         }
 
-        Hat02_Own = PlayerPrefs.GetInt("Hat02_Own");
-        Hat02_Price = 125;
-        if (Button_Number == 1)
+        Hat02_Own = PlayerPrefs.GetInt("Hat02_Own", 0);
+        Hat02_Price = 0;
+        if (Button_Number == 2)
         {
-            this.GetComponentInChildren<Image>().overrideSprite = Hat01_Image;
+            this.GetComponentInChildren<Image>().overrideSprite = Hat02_Image;
+            this.GetComponentInChildren<Text>().text = Hat02_Price.ToString();
         }
 
-        Hat03_Own = PlayerPrefs.GetInt("Hat03_Own");
-        Hat03_Price = 200;
-        if (Button_Number == 1)
+        Hat03_Own = PlayerPrefs.GetInt("Hat03_Own", 0);
+        Hat03_Price = 0;
+        if (Button_Number == 3)
         {
-            this.GetComponentInChildren<Image>().overrideSprite = Hat01_Image;
+            this.GetComponentInChildren<Image>().overrideSprite = Hat03_Image;
+            this.GetComponentInChildren<Text>().text = Hat03_Price.ToString();
         }
 
-        Hat04_Own = PlayerPrefs.GetInt("Hat04_Own");
-        Hat04_Price = 250;
-        if (Button_Number == 1)
+        Hat04_Own = PlayerPrefs.GetInt("Hat04_Own", 0);
+        Hat04_Price = 0;
+        if (Button_Number == 4)
         {
-            this.GetComponentInChildren<Image>().overrideSprite = Hat01_Image;
+            this.GetComponentInChildren<Image>().overrideSprite = Hat04_Image;
+            this.GetComponentInChildren<Text>().text = Hat04_Price.ToString();
         }
 
-        Hat05_Own = PlayerPrefs.GetInt("Hat05_Own");
-        Hat05_Price = 375;
-        if (Button_Number == 1)
+        Hat05_Own = PlayerPrefs.GetInt("Hat05_Own", 0);
+        Hat05_Price = 0;
+        if (Button_Number == 5)
         {
-            this.GetComponentInChildren<Image>().overrideSprite = Hat01_Image;
+            this.GetComponentInChildren<Image>().overrideSprite = Hat05_Image;
+            this.GetComponentInChildren<Text>().text = Hat05_Price.ToString();
         }
 
-        Hat06_Own = PlayerPrefs.GetInt("Hat06_Own");
-        Hat06_Price = 525;
-        if (Button_Number == 1)
+        Hat06_Own = PlayerPrefs.GetInt("Hat06_Own", 0);
+        Hat06_Price = 0;
+        if (Button_Number == 6)
         {
-            this.GetComponentInChildren<Image>().overrideSprite = Hat01_Image;
+            this.GetComponentInChildren<Image>().overrideSprite = Hat06_Image;
+            this.GetComponentInChildren<Text>().text = Hat06_Price.ToString();
         }
 
         PurchaseItemButton = this.GetComponentInChildren<Button>();
         PurchaseItemButton.onClick.AddListener(OnClick);
 
         PlayerCoinValue = PlayerPrefs.GetInt("PlayerCoinAmount");
+
+        if (ResetOwnership == true)
+        {
+            PlayerPrefs.SetInt("Hat01_Own", 0);
+            PlayerPrefs.SetInt("Hat02_Own", 0);
+            PlayerPrefs.SetInt("Hat03_Own", 0);
+            PlayerPrefs.SetInt("Hat04_Own", 0);
+            PlayerPrefs.SetInt("Hat05_Own", 0);
+            PlayerPrefs.SetInt("Hat06_Own", 0);
+        }
     }
 
     private void Update()
     {
         //If the item is owned, change the button text to select as the button will be used to apply the hat
-        if (Hat01_Own == 1)
+        if (PlayerPrefs.GetInt("Hat01_Own") == 1)
         {
             PurchaseItemButton.GetComponentInChildren<Text>().text = "Select";
         }
 
         //If the item is owned, change the button text to select as the button will be used to apply the hat
-        if (Hat02_Own == 1)
+        if (PlayerPrefs.GetInt("Hat02_Own") == 1)
         {
             PurchaseItemButton.GetComponentInChildren<Text>().text = "Select";
         }
 
         //If the item is owned, change the button text to select as the button will be used to apply the hat
-        if (Hat03_Own == 1)
+        if (PlayerPrefs.GetInt("Hat03_Own") == 1)
         {
             PurchaseItemButton.GetComponentInChildren<Text>().text = "Select";
         }
 
         //If the item is owned, change the button text to select as the button will be used to apply the hat
-        if (Hat04_Own == 1)
+        if (PlayerPrefs.GetInt("Hat04_Own") == 1)
         {
             PurchaseItemButton.GetComponentInChildren<Text>().text = "Select";
         }
 
         //If the item is owned, change the button text to select as the button will be used to apply the hat
-        if (Hat05_Own == 1)
+        if (PlayerPrefs.GetInt("Hat05_Own") == 1)
         {
             PurchaseItemButton.GetComponentInChildren<Text>().text = "Select";
         }
 
         //If the item is owned, change the button text to select as the button will be used to apply the hat
-        if (Hat06_Own == 1)
+        if (PlayerPrefs.GetInt("Hat06_Own") == 1)
         {
             PurchaseItemButton.GetComponentInChildren<Text>().text = "Select";
         }
@@ -142,10 +161,10 @@ public class Store_Item : MonoBehaviour
         if (Button_Number == 1)
         {
          //Does player own the hat?
-         if (Hat01_Own == 1)
+         if (PlayerPrefs.GetInt("Hat01_Own") == 1)
             {
                 //Set Hat to this Hat mesh
-                Hat.GetComponent<MeshFilter>().mesh = Hat01;
+                HatGameobject.GetComponent<MeshFilter>().mesh = Hat01;
             }
             else
             //Player must purchase the hat
@@ -155,8 +174,9 @@ public class Store_Item : MonoBehaviour
                 {
                     //Deduct the price of the hat from the player's coins
                     PlayerPrefs.SetInt("PlayerCoinAmount", PlayerCoinValue - Hat01_Price);
+                    PlayerPrefs.SetInt("Hat01_Own", 1);
                     //Set Hat Mesh to this hat
-                    Hat.GetComponent<MeshFilter>().mesh = Hat01;
+                    HatGameobject.GetComponent<MeshFilter>().mesh = Hat01;
                 }
                 //If player cannot afford the item...
                 else
@@ -172,10 +192,10 @@ public class Store_Item : MonoBehaviour
         if (Button_Number == 2)
         {
             //Does player own the hat?
-            if (Hat02_Own == 1)
+            if (PlayerPrefs.GetInt("Hat02_Own") == 1)
             {
                 //Set Hat to this Hat mesh
-                Hat.GetComponent<MeshFilter>().mesh = Hat02;
+                HatGameobject.GetComponent<MeshFilter>().mesh = Hat02;
             }
             else
             //Player must purchase the hat
@@ -185,8 +205,9 @@ public class Store_Item : MonoBehaviour
                 {
                     //Deduct the price of the hat from the player's coins
                     PlayerPrefs.SetInt("PlayerCoinAmount", PlayerCoinValue - Hat02_Price);
+                    PlayerPrefs.SetInt("Hat02_Own", 1);
                     //Set Hat Mesh to this hat
-                    Hat.GetComponent<MeshFilter>().mesh = Hat02;
+                    HatGameobject.GetComponent<MeshFilter>().mesh = Hat02;
                 }
                 //If player cannot afford the item...
                 else
@@ -202,10 +223,10 @@ public class Store_Item : MonoBehaviour
         if (Button_Number == 3)
         {
             //Does player own the hat?
-            if (Hat03_Own == 1)
+            if (PlayerPrefs.GetInt("Hat03_Own") == 1)
             {
                 //Set Hat to this Hat mesh
-                Hat.GetComponent<MeshFilter>().mesh = Hat03;
+                HatGameobject.GetComponent<MeshFilter>().mesh = Hat03;
             }
             else
             //Player must purchase the hat
@@ -215,8 +236,9 @@ public class Store_Item : MonoBehaviour
                 {
                     //Deduct the price of the hat from the player's coins
                     PlayerPrefs.SetInt("PlayerCoinAmount", PlayerCoinValue - Hat03_Price);
+                    PlayerPrefs.SetInt("Hat03_Own", 1);
                     //Set Hat Mesh to this hat
-                    Hat.GetComponent<MeshFilter>().mesh = Hat03;
+                    HatGameobject.GetComponent<MeshFilter>().mesh = Hat03;
                 }
                 //If player cannot afford the item...
                 else
@@ -232,10 +254,10 @@ public class Store_Item : MonoBehaviour
         if (Button_Number == 4)
         {
             //Does player own the hat?
-            if (Hat04_Own == 1)
+            if (PlayerPrefs.GetInt("Hat04_Own") == 1)
             {
                 //Set Hat to this Hat mesh
-                Hat.GetComponent<MeshFilter>().mesh = Hat04;
+                HatGameobject.GetComponent<MeshFilter>().mesh = Hat04;
             }
             else
             //Player must purchase the hat
@@ -245,8 +267,9 @@ public class Store_Item : MonoBehaviour
                 {
                     //Deduct the price of the hat from the player's coins
                     PlayerPrefs.SetInt("PlayerCoinAmount", PlayerCoinValue - Hat04_Price);
+                    PlayerPrefs.SetInt("Hat04_Own", 1);
                     //Set Hat Mesh to this hat
-                    Hat.GetComponent<MeshFilter>().mesh = Hat04;
+                    HatGameobject.GetComponent<MeshFilter>().mesh = Hat04;
                 }
                 //If player cannot afford the item...
                 else
@@ -262,10 +285,10 @@ public class Store_Item : MonoBehaviour
         if (Button_Number == 5)
         {
             //Does player own the hat?
-            if (Hat05_Own == 1)
+            if (PlayerPrefs.GetInt("Hat05_Own") == 1)
             {
                 //Set Hat to this Hat mesh
-                Hat.GetComponent<MeshFilter>().mesh = Hat05;
+                HatGameobject.GetComponent<MeshFilter>().mesh = Hat05;
             }
             else
             //Player must purchase the hat
@@ -275,8 +298,9 @@ public class Store_Item : MonoBehaviour
                 {
                     //Deduct the price of the hat from the player's coins
                     PlayerPrefs.SetInt("PlayerCoinAmount", PlayerCoinValue - Hat05_Price);
+                    PlayerPrefs.SetInt("Hat05_Own", 1);
                     //Set Hat Mesh to this hat
-                    Hat.GetComponent<MeshFilter>().mesh = Hat05;
+                    HatGameobject.GetComponent<MeshFilter>().mesh = Hat05;
                 }
                 //If player cannot afford the item...
                 else
@@ -292,10 +316,10 @@ public class Store_Item : MonoBehaviour
         if (Button_Number == 6)
         {
             //Does player own the hat?
-            if (Hat06_Own == 1)
+            if (PlayerPrefs.GetInt("Hat06_Own") == 1)
             {
                 //Set Hat to this Hat mesh
-                Hat.GetComponent<MeshFilter>().mesh = Hat06;
+                HatGameobject.GetComponent<MeshFilter>().mesh = Hat06;
             }
             else
             //Player must purchase the hat
@@ -305,8 +329,9 @@ public class Store_Item : MonoBehaviour
                 {
                     //Deduct the price of the hat from the player's coins
                     PlayerPrefs.SetInt("PlayerCoinAmount", PlayerCoinValue - Hat06_Price);
+                    PlayerPrefs.SetInt("Hat06_Own", 1);
                     //Set Hat Mesh to this hat
-                    Hat.GetComponent<MeshFilter>().mesh = Hat06;
+                    HatGameobject.GetComponent<MeshFilter>().mesh = Hat06;
                 }
                 //If player cannot afford the item...
                 else

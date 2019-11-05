@@ -11,6 +11,9 @@ public class StoreManager : MonoBehaviour
     private Button StoreAccessButton;
     public GameObject hat;
     private CanvasGroup StoreCanvasGroup;
+    [SerializeField] private GameObject StoreItemGameObject;
+    [SerializeField] private Button StoreAlert;
+    private bool AnimationHasPlayed = false;
     // Start is called before the first frame update
     private void Start()
     {
@@ -46,5 +49,27 @@ public class StoreManager : MonoBehaviour
     private void DeactivateStore()
     {
         StoreCanvas.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (StoreItemGameObject.GetComponent<Store_Item>().CanAfford == true)
+        {
+            if (AnimationHasPlayed == false)
+            {
+                LeanTween.delayedCall(10F, SetAnimCounter);
+            }
+        }
+    }
+    private void SetAnimCounter()
+    {
+        LeanTween.rotateZ(StoreAlert.gameObject, -20, 0.5F);
+        LeanTween.rotateZ(StoreAlert.gameObject, 20, 0.5F).setDelay(0.5F);
+        LeanTween.rotateZ(StoreAlert.gameObject, -20, 0.5F).setDelay(1F);
+        LeanTween.rotateZ(StoreAlert.gameObject, 20, 0.5F).setDelay(1.5F);
+        LeanTween.rotateZ(StoreAlert.gameObject, -20, 0.5F).setDelay(2.0F);
+        LeanTween.rotateZ(StoreAlert.gameObject, 20, 0.5F).setDelay(2.5F);
+        LeanTween.rotateZ(StoreAlert.gameObject, 0, 0.5F).setDelay(3.0F);
+        LeanTween.delayedCall(3F, SetAnimCounter);
     }
 }

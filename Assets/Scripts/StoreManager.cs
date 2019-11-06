@@ -29,6 +29,10 @@ public class StoreManager : MonoBehaviour
     }
     private void OnClickOpen()
     {
+        //Stop animation
+        LeanTween.cancel(StoreItemGameObject);
+
+
         LeanTween.delayedCall(1f, DelayedScaleDown);
         StoreCanvas.SetActive(true);
         LeanTween.alphaCanvas(StoreCanvasGroup, 0, 0f);
@@ -57,11 +61,21 @@ public class StoreManager : MonoBehaviour
         {
             if (AnimationHasPlayed == false)
             {
-                LeanTween.delayedCall(10F, SetAnimCounter);
+                AnimationHasPlayed = true;
+
+                //Animation
+                LeanTween.value(StoreAlert.gameObject, 0, 40, 0.5f).setEase(LeanTweenType.easeInOutSine).setOnUpdate((float value) =>
+                {
+                    float rotationAmount = value - 20;
+                    Vector3 rotation = StoreAlert.transform.eulerAngles;
+                    rotation.z = rotationAmount;
+                    StoreAlert.transform.eulerAngles = rotation;
+
+                }).setLoopPingPong();
             }
         }
     }
-    private void SetAnimCounter()
+    /*private void SetAnimCounter()
     {
         LeanTween.rotateZ(StoreAlert.gameObject, -20, 0.5F);
         LeanTween.rotateZ(StoreAlert.gameObject, 20, 0.5F).setDelay(0.5F);
@@ -71,5 +85,5 @@ public class StoreManager : MonoBehaviour
         LeanTween.rotateZ(StoreAlert.gameObject, 20, 0.5F).setDelay(2.5F);
         LeanTween.rotateZ(StoreAlert.gameObject, 0, 0.5F).setDelay(3.0F);
         LeanTween.delayedCall(3F, SetAnimCounter);
-    }
+    }*/
 }

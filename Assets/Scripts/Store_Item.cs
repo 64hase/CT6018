@@ -14,7 +14,11 @@ public class Store_Item : MonoBehaviour
     [SerializeField] private Sprite HatSprite;
     [SerializeField] private Image StoreImage;
     [SerializeField] private bool ResetOwnership = false;
-    public bool CanAfford;
+    public bool CanAfford
+    {
+        get { return PlayerPrefs.GetInt("PlayerCoinAmount", 0) >= HatPrice; }
+        //private set { }
+    }
 
     private void Start()
     {
@@ -58,13 +62,13 @@ public class Store_Item : MonoBehaviour
     }
     private void Update()
     {
-        if (PlayerPrefs.GetInt("PlayerCoinAmount", 0) >= HatPrice)
+       /* if (PlayerPrefs.GetInt("PlayerCoinAmount", 0) >= HatPrice)
         {
             CanAfford = true;
         }
         else
         {
             CanAfford = false;
-        }
+        }*/
     }
 }

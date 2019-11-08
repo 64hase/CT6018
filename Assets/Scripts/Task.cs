@@ -17,11 +17,17 @@ public class Task : MonoBehaviour
     private Button button;
     public Color colorToAnimateBackgroundTo;
     private int CoinCalculation;
+    private float ProgressAim;
+    private float Progress;
+    private int Stagenumber;
 
     private void Start()
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
+        ProgressAim = GetComponentInParent<ProgressBar>().ProgressAim;
+        Progress = GetComponentInParent<ProgressBar>().Progress;
+        Stagenumber = GetComponentInParent<ProgressBar>().Stagenumber;
     }
 
     private void OnClick()
@@ -38,11 +44,17 @@ public class Task : MonoBehaviour
 
         //Increases the player's progress value by the value of the task they have just completed, IF, a task of more than 0 character was inputted.
         InputFieldText = TaskInputField.text;
+
         if (InputFieldText.Length > 0)
         {
             PlayerPrefs.SetFloat("Progress", PlayerPrefs.GetFloat("Progress", 0) + TaskPointValue);
             CoinCalculation = PlayerPrefs.GetInt("PlayerCoinAmount") + 5;
             PlayerPrefs.SetInt("PlayerCoinAmount", CoinCalculation);
+        }
+
+        if (Progress >= (ProgressAim - TaskPointValue))
+        {
+            Stagenumber = Stagenumber + 1;
         }
 
         //Testing OnClick 

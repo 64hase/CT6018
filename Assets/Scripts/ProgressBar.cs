@@ -18,35 +18,43 @@ public class ProgressBar : MonoBehaviour
         get { return PlayerPrefs.GetFloat(KEY_PROGRESSAIM); }
         set { PlayerPrefs.SetFloat(KEY_PROGRESSAIM, value); }
     }
-    [SerializeField]
     //For referencing the PrpgressFill Image used o the progress bar
-    public Image ProgressFill;
+    [SerializeField] private Image ProgressFill;
     //The multiplier applied to ProgressAim once it has been reached by the player
-    private float AimMultiplier = 2.5F;
+    [SerializeField] private float AimMultiplier = 2.5F;
     //Use for referencing ProgressText
-    public Text ProgressText;
+    [SerializeField] private Text ProgressText;
     //Used to convert Text element to String to allow for Length calculation
-    private string ProgressTextString;
+    [SerializeField] private string ProgressTextString;
     //Allows for default values for progress/progressAim to be toggled On/Off
-    public bool UseDefaults;
-    public GameObject PlayerTree;
-    //For referencing Tree Stage 01 Mesh
-    public Mesh Tree_Stage01;
-    //For referencing Tree Stage 02 Mesh
-    public Mesh Tree_Stage02;
-    //For referencing Tree Stage 03 Mesh
-    public Mesh Tree_Stage03;
+    [SerializeField] private bool UseDefaults;
+    [SerializeField] private GameObject PlayerTree;
+    [SerializeField] private GameObject Tree_Stage00;
+    //For referencing Tree Stage 01 Gameobject
+    [SerializeField] private GameObject Tree_Stage01;
+    //For referencing Tree Stage 02 Gameobject
+    [SerializeField] private GameObject Tree_Stage02;
+    //For referencing Tree Stage 03 Gameobject
+    [SerializeField] private GameObject Tree_Stage03;
     //Stage number used to track the stage the player is currently on
-    public int Stagenumber = 1;
+    public int Stagenumber = 0;
     //Used for referencing the HAT Placeholder empty gameobject
-    public GameObject HatPlaceHolder;
+    [SerializeField] private GameObject HatPlaceHolder;
     // Start is called before the first frame update
+    private bool Stage00Completed = false;
+    private bool Stage01Completed = false;
+    private bool Stage02Completed = false;
+
+
+
+
     private void Start()
     {
         if (UseDefaults == true)
         {
             Progress = 0;
             ProgressAim = 10;
+            Stagenumber = 0;
         }
     }
 
@@ -63,24 +71,30 @@ public class ProgressBar : MonoBehaviour
         ProgressText.GetComponent<Text>().text = ProgressTextString;
 
         //Once player has reached their progress aim, the aim is updated via multiplication.
-        if (Progress >= ProgressAim)
+        if (Progress == ProgressAim)
         {
-            Stagenumber = Stagenumber + 1;
-            //Checks which tree the player currently has and then updates to the next stage mesh accordingly.
-            PlayerPrefs.SetFloat("ProgressAim", ProgressAim * AimMultiplier);
 
-            //If player's progress equates to stage 02 of the game, then update tree MeshFilter to stage02 mesh
-            if (Stagenumber == 2)
+            if (Stage00Completed == false)
             {
-                PlayerTree.GetComponent<MeshFilter>().mesh = Tree_Stage02;
-                HatPlaceHolder.transform.position = HatPlaceHolder.transform.position + new Vector3(0, 1.2F, 0);
+                Tree_Stage00.transform.position = new Vector3(-40, 0, 0);
+                Tree_Stage00.SetActive(false);
+                Tree_Stage01.transform.position = new Vector3(0, 8.844F, 0);
+                Tree_Stage01.SetActive(true);
+                PlayerPrefs.SetFloat("ProgressAim", ProgressAim * AimMultiplier);
+                Stage00Completed = true;
             }
 
-            //If player's progress equates to stage 03 of the game, the update tree MeshFilter to stage03 mesh
-            if (Stagenumber == 3)
+            if (Stage00Completed == true)
             {
-                PlayerTree.GetComponent<MeshFilter>().mesh = Tree_Stage03;
-                HatPlaceHolder.transform.position = new Vector3(0,0, 0.2F);
+                if (Stage01Completed == false)
+                {
+                    Tree_Stage01.transform.position = new Vector3(-40, 0, 0);
+                    Tree_Stage01.SetActive(false);
+                    Tree_Stage02.transform.position = new Vector3(0, 8.844F, 0);
+                    Tree_Stage02.SetActive(true);
+                    PlayerPrefs.SetFloat("ProgressAim", ProgressAim * AimMultiplier);
+                    Stage01Completed = true;
+                }
             }
         }
     }

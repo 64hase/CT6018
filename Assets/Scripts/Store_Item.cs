@@ -14,6 +14,7 @@ public class Store_Item : MonoBehaviour
     [SerializeField] private Sprite HatSprite;
     [SerializeField] private Image StoreImage;
     [SerializeField] private bool ResetOwnership = false;
+    [SerializeField] private MeshFilter[] HatArray;
     public bool CanAfford
     {
         get { return PlayerPrefs.GetInt("PlayerCoinAmount", 0) >= HatPrice; }
@@ -37,17 +38,25 @@ public class Store_Item : MonoBehaviour
         string PlayerPrefValue = ("Hat" + StoreItemNumber + "_Own");
         if (PlayerPrefs.GetInt(PlayerPrefValue, 0) == 1)
         {
-            PlayerHatMeshFilter.mesh = HatMesh;
+            for (int i = 0; i < HatArray.Length; i++)
+            {
+                HatArray[i].mesh = HatMesh;
+            }
         }
         else
         {
             if (PlayerPrefs.GetInt("PlayerCoinAmount", 0) >= HatPrice)
             {
                 int coinAmount = PlayerPrefs.GetInt("PlayerCoinAmount");
+
                 PlayerPrefs.SetInt("PlayerCoinAmount", coinAmount - HatPrice);
                 PlayerPrefs.SetInt(PlayerPrefValue, 1);
+
                 ButtonText.text = "Select";
-                PlayerHatMeshFilter.mesh = HatMesh;
+                for (int i = 0; i < HatArray.Length; i++)
+                {
+                    HatArray[i].mesh = HatMesh;
+                }
             }
             else
             {

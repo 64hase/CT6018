@@ -50,23 +50,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48f1d1a1f67759a4aac866f1960db090, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Hat01_Own: 0
-  Hat01_Image: {fileID: 21300000, guid: 5fdf7555b4644984c9666caf93d6651d, type: 3}
-  Hat01: {fileID: 1800633924728871233, guid: 09c9be133a988114f917de4071acec6c, type: 3}
-  Hat02_Image: {fileID: 21300000, guid: b9a4c73a6a7919b48a551297a85f7b45, type: 3}
-  Hat02: {fileID: 2296606154107714417, guid: 62b7d294406ebe1479052a6c459c4552, type: 3}
-  Hat03_Image: {fileID: 21300000, guid: 4ad8e113711727248a7caf83302f7104, type: 3}
-  Hat03: {fileID: 2296606154107714417, guid: 62b7d294406ebe1479052a6c459c4552, type: 3}
-  Hat04_Image: {fileID: 21300000, guid: d6eb1dacf59c742418727770e79e6c83, type: 3}
-  Hat04: {fileID: -1034252683769616032, guid: 788445439dc75fd42a394eb2aa0e8d55, type: 3}
-  Hat05_Image: {fileID: 21300000, guid: 5fdf7555b4644984c9666caf93d6651d, type: 3}
-  Hat05: {fileID: 1800633924728871233, guid: 09c9be133a988114f917de4071acec6c, type: 3}
-  Hat06_Image: {fileID: 21300000, guid: b9a4c73a6a7919b48a551297a85f7b45, type: 3}
-  Hat06: {fileID: 2296606154107714417, guid: 62b7d294406ebe1479052a6c459c4552, type: 3}
-  Button_Number: 1
-  HatGameobject: {fileID: 0}
-  PurchaseItemButton: {fileID: 0}
+  PlayerHatMeshFilter: {fileID: 0}
+  StoreItemNumber: 0
+  HatPrice: 0
+  HatMesh: {fileID: 0}
+  PurchaseButton: {fileID: 0}
+  ButtonText: {fileID: 0}
+  HatSprite: {fileID: 0}
+  StoreImage: {fileID: 0}
   ResetOwnership: 0
+  HatArray:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &797365066242743381
 GameObject:
   m_ObjectHideFlags: 0

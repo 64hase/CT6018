@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class StoreManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject StoreCanvas;
-    private Button StoreExitButton;
-    private Button StoreAccessButton;
-    public GameObject hat;
-    private CanvasGroup StoreCanvasGroup;
+    [SerializeField] private GameObject StoreCanvas;
+    [SerializeField] private Button StoreExitButton;
+    [SerializeField] private Button StoreAccessButton;
+    [SerializeField] private CanvasGroup StoreCanvasGroup;
     [SerializeField] private GameObject StoreItemGameObject;
     [SerializeField] private Button StoreAlert;
+    [SerializeField] private GameObject[] PlayerTreeHat;
+    private Vector3 HatScale;
+
     private bool AnimationHasPlayed = false;
+    private GameObject PlayerTree;
+    private int PlayerStage;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -25,6 +30,8 @@ public class StoreManager : MonoBehaviour
         StoreAccessButton.onClick.AddListener(OnClickOpen);
         StoreCanvas.LeanAlpha(0, 0f);
         StoreCanvasGroup = StoreCanvas.GetComponent<CanvasGroup>();
+        PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
+        PlayerTree = EventSystem.current.GetComponent<ProgressManager>().PlayerTreeGameObject;
 
     }
     private void OnClickOpen()
@@ -41,14 +48,15 @@ public class StoreManager : MonoBehaviour
     }
     private void OnClickClose()
     {
-        LeanTween.scale(hat, new Vector3(0.6F, 0.6F, 0.6F), 1.0F).setEaseOutElastic().setDelay(1f);
+        PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
+        LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(0.6F, 0.6F, 0.6F), 1.0F).setEaseOutElastic().setDelay(1f);
         LeanTween.alphaCanvas(StoreCanvasGroup, 0, 1f).setEaseInOutQuint();
         LeanTween.delayedCall(2f, DeactivateStore);
     }
 
     private void DelayedScaleDown()
     {
-        LeanTween.scale(hat, new Vector3(0, 0, 0), 0F);
+        LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(0, 0, 0), 0F);
     }
     private void DeactivateStore()
     {

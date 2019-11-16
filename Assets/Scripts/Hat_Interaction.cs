@@ -1,15 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Hat_Interaction : MonoBehaviour
 {
-    public GameObject Hat;
+    private GameObject PlayerTreeHat;
     private bool AnimationInProgress;
+    private int PlayerStage;
+    private Vector3 HatScale;
+    private Vector3 HatScaleUp;
     // Start is called before the first frame update
     private void Start()
     {
         AnimationInProgress = false;
+        SetTreeScale();
+        PlayerTreeHat = this.gameObject;
+    }
+    public void SetTreeScale()
+    {
+        HatScale = this.transform.localScale;
+        HatScaleUp = new Vector3(HatScale.x * 1.1F, HatScale.y * 1.1F, HatScale.z * 1.1F);
     }
 
     private void OnMouseOver()
@@ -19,15 +30,20 @@ public class Hat_Interaction : MonoBehaviour
         {
             if (AnimationInProgress == false)
             {
+                AnimationInProgress = true;
                 Debug.Log("MousePressedOnHat");
-                LeanTween.scale(Hat, new Vector3(0.55F, 0.55F, 0.55F), 0.15f).setEaseInOutQuint();
+
+                PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
+
+
+                LeanTween.scale(PlayerTreeHat, new Vector3(HatScaleUp.x,HatScaleUp.y,HatScaleUp.z), 0.15F).setEaseInOutQuint();
                 LeanTween.delayedCall(0.15f, EaseOutAnimation);
             }
         }
     }
     private void EaseOutAnimation()
     {
-        LeanTween.scale(Hat, new Vector3(0.5F, 0.5F, 0.5F), 0.15F).setEaseInOutQuint();
+        LeanTween.scale(PlayerTreeHat, new Vector3(HatScale.x, HatScale.y, HatScale.z), 0.15F).setEaseInOutQuint();
         AnimationInProgress = false;
     }
 }

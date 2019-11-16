@@ -2,32 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Button))]
 public class Task : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] private GameObject TaskElementBackground;
+    [SerializeField] private Text TaskTextRef;
+    [SerializeField] private Text TaskPlaceHolderTextRef;
+    [SerializeField] private InputField TaskInputField;
+    [SerializeField] private Color colorToAnimateBackgroundTo;
+
     private int TaskPointValue = 2;
     private string InputFieldText;
-    public GameObject TaskElementBackground;
-    public Text TaskTextRef;
-    public Text TaskPlaceHolderTextRef;
-    public InputField TaskInputField;
     private IEnumerator coroutine;
     private Button button;
-    public Color colorToAnimateBackgroundTo;
-    private int CoinCalculation;
-    private float ProgressAim;
-    private float Progress;
+    private float ProgressManager;
     private int Stagenumber;
+    private GameObject EventSystemObject;
+
+    private ProgressBar progressBar;
 
     private void Start()
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
-        ProgressAim = GetComponentInParent<ProgressBar>().ProgressAim;
-        Progress = GetComponentInParent<ProgressBar>().Progress;
-        Stagenumber = GetComponentInParent<ProgressBar>().Stagenumber;
+        EventSystemObject = EventSystem.current.gameObject;
     }
 
     private void OnClick()
@@ -47,14 +48,7 @@ public class Task : MonoBehaviour
 
         if (InputFieldText.Length > 0)
         {
-            PlayerPrefs.SetFloat("Progress", PlayerPrefs.GetFloat("Progress", 0) + TaskPointValue);
-            CoinCalculation = PlayerPrefs.GetInt("PlayerCoinAmount") + 5;
-            PlayerPrefs.SetInt("PlayerCoinAmount", CoinCalculation);
-        }
-
-        if (Progress >= (ProgressAim - TaskPointValue))
-        {
-            Stagenumber = Stagenumber + 1;
+            EventSystemObject.GetComponentInParent<ProgressManager>().UpdateProgress();
         }
 
         //Testing OnClick 

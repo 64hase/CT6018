@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class ProgressBar : MonoBehaviour
 {
-
     public const string KEY_PROGRESS = "Progress";
     public const string KEY_PROGRESSAIM = "ProgressAim";
     public float Progress
@@ -29,73 +28,66 @@ public class ProgressBar : MonoBehaviour
     //Allows for default values for progress/progressAim to be toggled On/Off
     [SerializeField] private bool UseDefaults;
     [SerializeField] private GameObject PlayerTree;
-    [SerializeField] private GameObject Tree_Stage00;
-    //For referencing Tree Stage 01 Gameobject
-    [SerializeField] private GameObject Tree_Stage01;
-    //For referencing Tree Stage 02 Gameobject
-    [SerializeField] private GameObject Tree_Stage02;
-    //For referencing Tree Stage 03 Gameobject
-    [SerializeField] private GameObject Tree_Stage03;
+    private GameObject[] Tree;
+    [SerializeField] private GameObject Tree00;
+    [SerializeField] private GameObject Tree01;
+    [SerializeField] private GameObject Tree02;
+    [SerializeField] private GameObject Tree03;
+
     //Stage number used to track the stage the player is currently on
     public int Stagenumber = 0;
     //Used for referencing the HAT Placeholder empty gameobject
     [SerializeField] private GameObject HatPlaceHolder;
-    // Start is called before the first frame update
-    private bool Stage00Completed = false;
-    private bool Stage01Completed = false;
-    private bool Stage02Completed = false;
-
-
-
 
     private void Start()
     {
+        Tree[0] = Tree00;
+        Tree[1] = Tree01;
+        Tree[2] = Tree02;
+        Tree[3] = Tree03;
+
         if (UseDefaults == true)
         {
             Progress = 0;
             ProgressAim = 10;
             Stagenumber = 0;
         }
+
     }
 
     // Update is called once per frame
     private void Update()
     {
-        
+        //int tree - store this in player prefs
+        //tree[]
+        //tree = 3;
+        //tree++;
+        //currentTree = tree[tree]
+        //tree = tree + 1;
 
+        
+    }
+
+    public void UpdateProgress()
+    {
         //Controls the fill of the progress bar based on the player's progress and progress aim
         ProgressFill.fillAmount = Progress / ProgressAim;
 
         //Formats the progress bar text to remain updated with the current progress and aim of the player
-        ProgressTextString = string.Format(Progress+"/"+ProgressAim);
+        ProgressTextString = string.Format(Progress + "/" + ProgressAim);
         ProgressText.GetComponent<Text>().text = ProgressTextString;
 
         //Once player has reached their progress aim, the aim is updated via multiplication.
         if (Progress == ProgressAim)
         {
-
-            if (Stage00Completed == false)
-            {
-                Tree_Stage00.transform.position = new Vector3(-40, 0, 0);
-                Tree_Stage00.SetActive(false);
-                Tree_Stage01.transform.position = new Vector3(0, 8.844F, 0);
-                Tree_Stage01.SetActive(true);
-                PlayerPrefs.SetFloat("ProgressAim", ProgressAim * AimMultiplier);
-                Stage00Completed = true;
-            }
-
-            if (Stage00Completed == true)
-            {
-                if (Stage01Completed == false)
-                {
-                    Tree_Stage01.transform.position = new Vector3(-40, 0, 0);
-                    Tree_Stage01.SetActive(false);
-                    Tree_Stage02.transform.position = new Vector3(0, 8.844F, 0);
-                    Tree_Stage02.SetActive(true);
-                    PlayerPrefs.SetFloat("ProgressAim", ProgressAim * AimMultiplier);
-                    Stage01Completed = true;
-                }
-            }
+            TreeGrowthEvent();
         }
+    }
+
+    private void TreeGrowthEvent()
+    {
+        Tree[Stagenumber].SetActive(false);
+        Stagenumber = Stagenumber + 1;
+        Tree[Stagenumber].SetActive(true);
     }
 }

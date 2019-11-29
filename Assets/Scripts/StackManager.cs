@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class StackManager : MonoBehaviour
 {
-    public GameObject stackBase;
-    public Stack stackster;
-    int stackPos = 0;
+    [SerializeField] private GameObject stackBase;
+    [SerializeField] private Stack stackster;
+    [SerializeField] private Image BottomShadow;
+    [SerializeField] private Button TaskButton;
+    private int stackPos = 0;
 
     //Debug - remove this later
-    private int spawnedElements = 0;
+    public int spawnedElements = 0;
 
     /*[SerializeField]
     private StackElement elementToInstantiate;*/
@@ -30,13 +33,12 @@ public class StackManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-
-
-        /*
-        for (int i = stackster.Count; i < 4; i++)
+        //TaskButton.onClick.AddListener(ShowShadow);
+        ShowShadow();
+        for (int i = spawnedElements; i < 2; i++)
         {
             SpawnElement();
-        }*/
+        }
     }
 
     // Update is called once per frame
@@ -49,6 +51,7 @@ public class StackManager : MonoBehaviour
     {
         SpawnElement();
         Debug.Log("I pushed an item on the stack");
+        ShowShadow();
     }
 
     public void PopButton()
@@ -56,7 +59,6 @@ public class StackManager : MonoBehaviour
         GameObject temp;
         temp = (GameObject)stackster.Pop();
         GameObject.Destroy(temp);
-
     }
 
     private void SpawnElement()
@@ -73,6 +75,17 @@ public class StackManager : MonoBehaviour
             instantiatedStackElement.name = "SpawnedElement_" + spawnedElements;
             ((RectTransform)instantiatedStackElement.transform).SetAsFirstSibling();
             stackster.Push(instantiatedStackElement);
+        }
+    }
+    public void ShowShadow()
+    {
+        if (spawnedElements > 3)
+        {
+            BottomShadow.color = new Vector4(1, 1, 1, 0.5F);
+        }
+        else
+        {
+            BottomShadow.color = new Vector4(1, 1, 1, 0);
         }
     }
 

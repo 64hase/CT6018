@@ -15,16 +15,13 @@ public class StoreManager : MonoBehaviour
     [SerializeField] private GameObject[] PlayerTreeHat;
     private Vector3 HatScale;
 
-    private bool AnimationHasPlayed = false;
+    private bool AnimationIsPlaying = false;
     private GameObject PlayerTree;
     private int PlayerStage;
 
     // Start is called before the first frame update
     private void Start()
     {
-        StoreCanvas = GameObject.Find("Customisation_Shop");
-        StoreExitButton = GameObject.Find("Store_Exit_Button").GetComponent<Button>();
-        StoreAccessButton = GameObject.Find("StoreButton").GetComponent<Button>();
         StoreCanvas.SetActive(false);
         StoreExitButton.onClick.AddListener(OnClickClose);
         StoreAccessButton.onClick.AddListener(OnClickOpen);
@@ -32,14 +29,15 @@ public class StoreManager : MonoBehaviour
         StoreCanvasGroup = StoreCanvas.GetComponent<CanvasGroup>();
         PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
         PlayerTree = EventSystem.current.GetComponent<ProgressManager>().PlayerTreeGameObject;
-
+        HatScale = PlayerTreeHat[PlayerStage].transform.localScale;
     }
     private void OnClickOpen()
     {
         //Stop animation
         LeanTween.cancel(StoreItemGameObject);
 
-
+        PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
+        HatScale = PlayerTreeHat[PlayerStage].transform.localScale;
         LeanTween.delayedCall(1f, DelayedScaleDown);
         StoreCanvas.SetActive(true);
         LeanTween.alphaCanvas(StoreCanvasGroup, 0, 0f);
@@ -48,8 +46,7 @@ public class StoreManager : MonoBehaviour
     }
     private void OnClickClose()
     {
-        PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
-        LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(0.6F, 0.6F, 0.6F), 1.0F).setEaseOutElastic().setDelay(1f);
+        LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(HatScale.x,HatScale.y,HatScale.z), 1.0F).setEaseOutElastic().setDelay(1f);
         LeanTween.alphaCanvas(StoreCanvasGroup, 0, 1f).setEaseInOutQuint();
         LeanTween.delayedCall(2f, DeactivateStore);
     }
@@ -67,9 +64,9 @@ public class StoreManager : MonoBehaviour
     {
         if (StoreItemGameObject.GetComponent<Store_Item>().CanAfford == true)
         {
-            if (AnimationHasPlayed == false)
+            if (AnimationIsPlaying == false)
             {
-                AnimationHasPlayed = true;
+                AnimationIsPlaying = true;
 
                 //Animation
                 LeanTween.value(StoreAlert.gameObject, 0, 40, 0.5f).setEase(LeanTweenType.easeInOutSine).setOnUpdate((float value) =>

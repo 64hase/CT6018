@@ -19,8 +19,6 @@ public class ProgressBar : MonoBehaviour
     }
     //For referencing the PrpgressFill Image used o the progress bar
     [SerializeField] private Image ProgressFill;
-    //The multiplier applied to ProgressAim once it has been reached by the player
-    [SerializeField] private float AimMultiplier = 2.5F;
     //Use for referencing ProgressText
     [SerializeField] private Text ProgressText;
     //Used to convert Text element to String to allow for Length calculation

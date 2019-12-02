@@ -25,6 +25,7 @@ public class Tasks_V02_List : MonoBehaviour
     [SerializeField] private GameObject[] TaskListObjs;
     [SerializeField] private Button UpdateNameButton;
     [SerializeField] private Text TasksLeft;
+    private GameObject TaskRef;
 
     private void Awake()
     {
@@ -79,7 +80,6 @@ public class Tasks_V02_List : MonoBehaviour
             TaskListObjs[i].GetComponent<Task_V02>().OnUpdateFromObjectName();
         }
     }
-
     //Get all new task data
     //Go through each stack element in a for loop
     //Check for the task id 
@@ -87,4 +87,14 @@ public class Tasks_V02_List : MonoBehaviour
     //if task id doesn't exist: delete stack element
     //then check to see if all ids in the stack match up to the new task data
     //if one exists in the stack but doesn't in the new task data then delete that task from the stack
+    public void OnTaskComplete(GameObject Task)
+    {
+        TaskRef = Task;
+        string TaskName = Task.gameObject.name.ToString();
+        LeanTween.delayedCall(4F, DestroyTask);
+    }
+    private void DestroyTask()
+    {
+        GameObject.Destroy(TaskRef);
+    }
 }

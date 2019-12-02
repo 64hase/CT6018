@@ -16,6 +16,7 @@ public class ColourOperator : MonoBehaviour
     private Image imageComp;
     private InputField ifComp;
     private Text ifTextComp;
+    private Color OriginalColour;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,17 @@ public class ColourOperator : MonoBehaviour
         if(ifComp != null)
         {
             ifTextComp = ifComp.GetComponent<Text>();
+        }
+        if (textComp != null)
+        {
+            OriginalColour = this.GetComponent<Text>().color;
+        }
+        if (imageComp != null)
+        {
+            OriginalColour = this.GetComponent<Image>().color;
+        }
+        if (ifComp != null)
+        {
         }
         ColourManager.DarkModeChanged += OnColourUpdate;
         OnColourUpdate();
@@ -49,14 +61,14 @@ public class ColourOperator : MonoBehaviour
         Text textComp = GetComponent<Text>();
         if (textComp != null)
         {
-            LeanTween.value(gameObject, textComp.color, DarkModeEnabled ? ColourManager.Instance.UI_Text_DARK : ColourManager.Instance.UI_Text_LIGHT, 1f).setEase(LeanTweenType.easeInOutSine).setOnUpdate((Color value) =>
+            LeanTween.value(gameObject, textComp.color, DarkModeEnabled ? ColourManager.Instance.UI_Text_DARK : OriginalColour, 1f).setEase(LeanTweenType.easeInOutSine).setOnUpdate((Color value) =>
             {
                 textComp.color = value;
             });
         }
         if (imageComp != null)
         {
-            LeanTween.value(gameObject, imageComp.color, DarkModeEnabled ? ColourManager.Instance.UI_Primary_Colour_DARK : ColourManager.Instance.UI_Primary_Colour_LIGHT, 1f).setEase(LeanTweenType.easeInOutSine).setOnUpdate((Color value) =>
+            LeanTween.value(gameObject, imageComp.color, DarkModeEnabled ? ColourManager.Instance.UI_Primary_Colour_DARK : OriginalColour, 1f).setEase(LeanTweenType.easeInOutSine).setOnUpdate((Color value) =>
             {
                 imageComp.color = value;
             });
@@ -67,7 +79,7 @@ public class ColourOperator : MonoBehaviour
             InputFieldText = ifTextComp;
             if (InputFieldText != null)
             {
-                InputFieldText.color = DarkModeEnabled ? ColourManager.Instance.UI_Text_DARK : ColourManager.Instance.UI_Text_LIGHT;
+                InputFieldText.color = DarkModeEnabled ? ColourManager.Instance.UI_Text_DARK : OriginalColour;
             }
         }
     }

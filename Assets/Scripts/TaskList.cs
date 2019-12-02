@@ -20,6 +20,10 @@ public class TaskList : MonoBehaviour
     public int TaskListNumber;
     private Text TaskStarCount;
     [SerializeField] private Button TaskListUpdateButton;
+    [SerializeField] private Button TaskListOpenButton;
+    [SerializeField] private Button TaskListCloseButton;
+    [SerializeField] private Canvas TaskListCanvas;
+    private OpenCloseWindows OpenCloseWindows;
 
     //Debug - remove this later
     public int spawnedTaskListElements = 0;
@@ -47,6 +51,9 @@ public class TaskList : MonoBehaviour
         }
         Debug.Log("Adding listener");
         TaskListUpdateButton.onClick.AddListener(UpdateTaskList);
+        TaskListOpenButton.onClick.AddListener(OnTaskListOpen);
+        TaskListCloseButton.onClick.AddListener(OnTaskListClose);
+        OpenCloseWindows = EventSystem.current.GetComponent<OpenCloseWindows>();
     }
     public void PushTaskListButton()
     {
@@ -93,5 +100,13 @@ public class TaskList : MonoBehaviour
         {
             SpawnTaskListElement(i);
         }
+    }
+    private void OnTaskListOpen()
+    {
+        OpenCloseWindows.OnWindowOpen(TaskListCanvas);
+    }
+    private void OnTaskListClose()
+    {
+        OpenCloseWindows.OnWindowClose(TaskListCanvas);
     }
 }

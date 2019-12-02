@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.EventSystems;
 
 public class Task_V02 : MonoBehaviour
 {
@@ -16,10 +17,14 @@ public class Task_V02 : MonoBehaviour
     [SerializeField] private Color PriorityHighColour;
     [SerializeField] private Color PriorityMediumColour;
     [SerializeField] private Color PriorityLowColour;
+    [SerializeField] private Button TaskCompleteButton;
+    private Tasks_V02_List TasksV02List;
 
     private void start()
     {
         OnUpdateFromObjectName();
+        TaskCompleteButton.onClick.AddListener(OnTaskComplete);
+        TasksV02List = EventSystem.current.GetComponent<Tasks_V02_List>();
     }
     public void OnUpdateFromObjectName()
     {
@@ -50,5 +55,9 @@ public class Task_V02 : MonoBehaviour
         {
             PriorityPanel.color = PriorityLowColour;
         }
+    }
+    private void OnTaskComplete()
+    {
+        TasksV02List.OnTaskComplete(this.gameObject);
     }
 }

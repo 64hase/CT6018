@@ -12,17 +12,17 @@ public class ColourManager : MonoBehaviour
     [SerializeField] public Color UI_Secondary_Colour_LIGHT;
     [SerializeField] public Color UI_Text_LIGHT;
     [SerializeField] public ColorBlock UI_Button_LIGHT;
-    [SerializeField] private Color colorStartLIGHT;
-    [SerializeField] private Color colorEndLIGHT;
+    [SerializeField] public Color colorStartLIGHT;
+    [SerializeField] public Color colorEndLIGHT;
     [SerializeField] public Color UI_Primary_Colour_DARK;
     [SerializeField] public Color UI_Secondary_Colour_DARK;
     [SerializeField] public Color UI_Text_DARK;
     [SerializeField] public ColorBlock UI_Button_DARK;
-    [SerializeField] private Color colorStartDARK;
-    [SerializeField] private Color colorEndDARK;
+    [SerializeField] public Color colorStartDARK;
+    [SerializeField] public Color colorEndDARK;
     [SerializeField] public bool DarkModeEnabled;
     [SerializeField] public GameObject NightModeButton;
-    [SerializeField] private ColourOperator ColourOperatorScript;
+    [SerializeField] public ColourOperator ColourOperatorScript;
     private Button NightModeButtonComponent;
 
     //Event to trigger dark mode changing
@@ -51,7 +51,7 @@ public class ColourManager : MonoBehaviour
         if (DarkModeEnabled)
         {
             Debug.Log("Working skybox alteration!");
-            RenderSettings.skybox.SetColor("_SkyhiTint", colorStartDARK);
+            RenderSettings.skybox.SetColor("_SkyTint", colorStartDARK);
             RenderSettings.skybox.SetColor("_Ground", colorEndDARK);
 
         }

@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 
 public class StoreManager : MonoBehaviour
 {
-    [SerializeField] private GameObject StoreCanvas;
+    [SerializeField] private GameObject StoreGameObject;
+    private Canvas StoreCanvas;
     [SerializeField] private Button StoreExitButton;
     [SerializeField] private Button StoreAccessButton;
     [SerializeField] private CanvasGroup StoreCanvasGroup;
@@ -18,14 +19,16 @@ public class StoreManager : MonoBehaviour
     private bool AnimationIsPlaying = false;
     private GameObject PlayerTree;
     private int PlayerStage;
+    private OpenCloseWindows OpenCloseWindows;
 
     // Start is called before the first frame update
     private void Start()
     {
-        StoreCanvas.SetActive(false);
+        OpenCloseWindows = EventSystem.current.GetComponent<OpenCloseWindows>();
+        StoreCanvas = StoreGameObject.GetComponent<Canvas>();
+        StoreGameObject.SetActive(false);
         StoreExitButton.onClick.AddListener(OnClickClose);
         StoreAccessButton.onClick.AddListener(OnClickOpen);
-        StoreCanvas.LeanAlpha(0, 0f);
         StoreCanvasGroup = StoreCanvas.GetComponent<CanvasGroup>();
         PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
         PlayerTree = EventSystem.current.GetComponent<ProgressManager>().PlayerTreeGameObject;
@@ -33,31 +36,21 @@ public class StoreManager : MonoBehaviour
     }
     private void OnClickOpen()
     {
-        //Stop animation
         LeanTween.cancel(StoreItemGameObject);
-
         PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
         HatScale = PlayerTreeHat[PlayerStage].transform.localScale;
+        OpenCloseWindows.OnWindowOpen(StoreCanvas);
         LeanTween.delayedCall(1f, DelayedScaleDown);
-        StoreCanvas.SetActive(true);
-        LeanTween.alphaCanvas(StoreCanvasGroup, 0, 0f);
-        LeanTween.alphaCanvas(StoreCanvasGroup, 1, 1f).setEaseInOutQuint().setDelay(0.2f);
-
     }
     private void OnClickClose()
     {
         LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(HatScale.x,HatScale.y,HatScale.z), 1.0F).setEaseOutElastic().setDelay(1f);
-        LeanTween.alphaCanvas(StoreCanvasGroup, 0, 1f).setEaseInOutQuint();
-        LeanTween.delayedCall(2f, DeactivateStore);
+        OpenCloseWindows.OnWindowClose(StoreCanvas);
     }
 
     private void DelayedScaleDown()
     {
         LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(0, 0, 0), 0F);
-    }
-    private void DeactivateStore()
-    {
-        StoreCanvas.SetActive(false);
     }
 
     private void Update()

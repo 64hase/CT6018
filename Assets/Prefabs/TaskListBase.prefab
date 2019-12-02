@@ -152,7 +152,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Normal Priority
+  m_Text: Normal
 --- !u!1 &3217985384045497160
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,6 +244,7 @@ GameObject:
   - component: {fileID: 6161823381208309729}
   - component: {fileID: 3560761590958642409}
   - component: {fileID: 5923165937985338553}
+  - component: {fileID: 7626211568428825536}
   m_Layer: 5
   m_Name: TaskListBase
   m_TagString: TaskList
@@ -297,14 +298,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 0da4bd38d04345e478cc3f405d648168, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -328,6 +329,21 @@ MonoBehaviour:
   dateText: {fileID: 4568528233646548273}
   descriptionText: {fileID: 2966614342807364078}
   priorityText: {fileID: 4540549144528225411}
+--- !u!114 &7626211568428825536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487179963452008951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1573420865, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 0.28627452}
+  m_EffectDistance: {x: 0, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &3946751217407212418
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,8 +379,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 170, y: 0}
-  m_SizeDelta: {x: -1040, y: -80}
+  m_AnchoredPosition: {x: 200, y: 0}
+  m_SizeDelta: {x: -1180, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3013383774551390080
 CanvasRenderer:

@@ -79,7 +79,7 @@ public class TaskList : MonoBehaviour
             string playerPrefString = "Task_" + elementNumber;
             Debug.Log("PlayerPrefString: " + PlayerPrefs.GetString(playerPrefString));
             string[] TaskInfoSplit = PlayerPrefs.GetString(playerPrefString).Split(',');
-            DateTime date = DateTime.Parse(TaskInfoSplit[1]);
+            DateTime date = DateTime.Parse(TaskInfoSplit.Length > 2 ? TaskInfoSplit[1] : DateTime.Now.ToString());
             element.Init(date.ToShortDateString(), TaskInfoSplit[0],  TaskInfoSplit.Length > 2 ? TaskInfoSplit[2] : string.Empty, TaskInfoSplit.Length > 3 ? int.Parse(TaskInfoSplit[3]) : 0);
         }
     }
@@ -88,24 +88,10 @@ public class TaskList : MonoBehaviour
         GameObject[] TaskListObjs = GameObject.FindGameObjectsWithTag("TaskList");
 
         int amountOfTasks = PlayerPrefs.GetInt("TaskNumber");
-        Debug.Log("AmountOfTasks: " + amountOfTasks);
+        Debug.Log("AmountOfTasks: " + (amountOfTasks + 1));
         for (int i = 0; i < amountOfTasks; i++)
         {
             SpawnTaskListElement(i);
         }
-
-        /*for (int i = 0; i < TaskNumber; i++)
-        {
-            //SpawnTaskListElement();
-            TaskDateText = TaskListObjs[i].transform.Find("TaskDate").gameObject;
-            TaskDescriptionText = TaskListObjs[i].transform.Find("TaskText").gameObject;
-            TaskPriority = TaskListObjs[i].transform.Find("PriorityText").gameObject;
-            string[] TaskInfoSplit;
-            TaskInfoSplit = PlayerPrefs.GetString("Task_" + i).Split(',');
-            TaskDateText.GetComponent<Text>().text = TaskInfoSplit[1];
-            TaskDescriptionText.GetComponent<Text>().text = TaskInfoSplit[0];
-            TaskPriority.GetComponent<Text>().text = TaskInfoSplit[2];
-            TaskStarCount.GetComponent<Text>().text = TaskInfoSplit[3];
-        }*/
     }
 }

@@ -31,17 +31,16 @@ public class Tasks_V02_List : MonoBehaviour
     private void Awake()
     {
         Taskstackster = new Stack();
-        Taskstackster.Push(TaskstackBase);
     }
     // Start is called before the first frame update
     private void Start()
     {
+        OnUpdateByName();
         for (int i = spawnedTaskElements; i < TaskNumber; i++)
         {
             SpawnTask(i);
         }
         UpdateNameButton.onClick.AddListener(OnUpdateByName);
-        OnUpdateByName();
     }
     public void PopTaskButton()
     {
@@ -51,7 +50,7 @@ public class Tasks_V02_List : MonoBehaviour
     }
     public void SpawnTask(int elementNumber)
     {
-        if (spawnedTaskElements > TaskNumber)
+        if (spawnedTaskElements >= TaskNumber)
         {
             Debug.Log("Stack limit has been reached!");
             return;
@@ -90,7 +89,7 @@ public class Tasks_V02_List : MonoBehaviour
     //if one exists in the stack but doesn't in the new task data then delete that task from the stack
     public void OnTaskComplete(GameObject Task)
     {
-        Debug.Log("TaskV02List has received OnTaskCOmplete()");
+        Debug.Log("TaskV02List has received OnTaskComplete()");
         string TaskName = Task.gameObject.name.ToString();
         LeanTween.delayedCall(1F, DestroyTask);
         TasksArchive.Add(PlayerPrefs.GetString(Task.gameObject.name));

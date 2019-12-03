@@ -18,91 +18,71 @@ public class TaskList : MonoBehaviour
     private GameObject TaskDescriptionText;
     private GameObject TaskPriority;
     public int TaskListNumber;
+    public int archivesize;
     private Text TaskStarCount;
-    [SerializeField] private Button TaskListUpdateButton;
     [SerializeField] private Button TaskListOpenButton;
     [SerializeField] private Button TaskListCloseButton;
     [SerializeField] private Canvas TaskListCanvas;
     private OpenCloseWindows OpenCloseWindows;
-
-    //Debug - remove this later
     public int spawnedTaskListElements = 0;
+    [SerializeField] private RectTransform content;
 
-    /*[SerializeField]
-    private StackElement elementToInstantiate;*/
-
-        [SerializeField] private RectTransform content;
-
-    //(RectTransform)gameObject.transform;
-
-    //
-
+    //Creates new stack
     private void Awake()
     {
         TaskListstackster = new Stack();
-        TaskListstackster.Push(TaskListstackBase);
     }
-    // Start is called before the first frame update
+
+    //On start, spawn atleast 2 elements, then apply listeners for buttons.
     private void Start()
     {
-        for (int i = spawnedTaskListElements; i < 2; i++)
-        {
-            SpawnTaskListElement(i);
-        }
         Debug.Log("Adding listener");
-        TaskListUpdateButton.onClick.AddListener(UpdateTaskList);
         TaskListOpenButton.onClick.AddListener(OnTaskListOpen);
         TaskListCloseButton.onClick.AddListener(OnTaskListClose);
         OpenCloseWindows = EventSystem.current.GetComponent<OpenCloseWindows>();
     }
-    public void PushTaskListButton()
-    {
-        //SpawnTaskListElement();
-        Debug.Log("I pushed an item on the stack");
-    }
 
-    public void PopTaskListButton()
-    {
-        GameObject temp;
-        temp = (GameObject)TaskListstackster.Pop();
-        GameObject.Destroy(temp);
-    }
-
+    //Spawns a task in the tasklist if the size of the archive in playerprefs has not yet been reached.
     private void SpawnTaskListElement(int elementNumber)
     {
-        if (spawnedTaskListElements > 15)
+        if (spawnedTaskListElements == archivesize)
         {
             Debug.Log("Stack limit has been reached!");
             return;
         }
         else
         {
-            spawnedTaskListElements++;
-            GameObject instantiatedStackElement = Instantiate(TaskListstackBase, content);
-            instantiatedStackElement.name = "TaskList_" + spawnedTaskListElements;
-            ((RectTransform)instantiatedStackElement.transform).SetAsFirstSibling();
-            TaskListstackster.Push(instantiatedStackElement);
-            TaskListElement element = instantiatedStackElement.GetComponent<TaskListElement>();
-            string playerPrefString = "Task_" + elementNumber;
-            Debug.Log("PlayerPrefString: " + PlayerPrefs.GetString(playerPrefString));
-            string[] TaskInfoSplit = PlayerPrefs.GetString(playerPrefString).Split(',');
-            DateTime date = DateTime.Parse(TaskInfoSplit.Length > 2 ? TaskInfoSplit[1] : DateTime.Now.ToString());
-            element.Init(date.ToShortDateString(), TaskInfoSplit[0],  TaskInfoSplit.Length > 2 ? TaskInfoSplit[2] : string.Empty, TaskInfoSplit.Length > 3 ? int.Parse(TaskInfoSplit[3]) : 0);
+                spawnedTaskListElements++;
+                GameObject instantiatedStackElement = Instantiate(TaskListstackBase, content);
+                instantiatedStackElement.name = "TaskArchive_" + spawnedTaskListElements;
+                ((RectTransform)instantiatedStackElement.transform).SetAsFirstSibling();
+                TaskListstackster.Push(instantiatedStackElement);
+                TaskListElement element = instantiatedStackElement.GetComponent<TaskListElement>();
+                string playerPrefString = "ArchivedTask_" + elementNumber;
+                Debug.Log("PlayerPrefString: " + PlayerPrefs.GetString(playerPrefString));
+                string[] TaskInfoSplit = PlayerPrefs.GetString(playerPrefString).Split(',');
+                DateTime date = DateTime.Parse(TaskInfoSplit.Length > 2 ? TaskInfoSplit[1] : DateTime.Now.ToString());
+                element.Init(date.ToShortDateString(), TaskInfoSplit[0], TaskInfoSplit.Length > 2 ? TaskInfoSplit[2] : string.Empty, TaskInfoSplit.Length > 3 ? int.Parse(TaskInfoSplit[3]) : 0);
         }
     }
+
+    //Assigned to a button, this updates the task list to match the
     private void UpdateTaskList()
     {
         GameObject[] TaskListObjs = GameObject.FindGameObjectsWithTag("TaskList");
-
-        int amountOfTasks = PlayerPrefs.GetInt("TaskNumber");
-        Debug.Log("AmountOfTasks: " + (amountOfTasks + 1));
-        for (int i = 0; i < amountOfTasks; i++)
+        Debug.Log("AmountOfTasks: " + (archivesize + 1));
+        for (int i = spawnedTaskListElements; i < archivesize; i++)
         {
-            SpawnTaskListElement(i);
+                SpawnTaskListElement(i);
         }
     }
     private void OnTaskListOpen()
     {
+        Debug.Log("OnEnable activated!");
+        for (int i = spawnedTaskListElements; i < archivesize; i++)
+        {
+            SpawnTaskListElement(i);
+        }
         OpenCloseWindows.OnWindowOpen(TaskListCanvas);
     }
     private void OnTaskListClose()

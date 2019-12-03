@@ -19,12 +19,14 @@ public class Task_V02 : MonoBehaviour
     [SerializeField] private Color PriorityLowColour;
     [SerializeField] private Button TaskCompleteButton;
     private Tasks_V02_List TasksV02List;
+    private TaskList TaskList;
 
     private void Start()
     {
         OnUpdateFromObjectName();
         TaskCompleteButton.onClick.AddListener(OnTaskComplete);
         TasksV02List = EventSystem.current.GetComponent<Tasks_V02_List>();
+        TaskList = EventSystem.current.GetComponent<TaskList>();
     }
     public void OnUpdateFromObjectName()
     {
@@ -59,6 +61,7 @@ public class Task_V02 : MonoBehaviour
     private void OnTaskComplete()
     {
         Debug.Log("Task has received OnTaskCOmplete()");
+        TaskList.archivesize++;
         TasksV02List.OnTaskComplete(this.gameObject);
     }
 }

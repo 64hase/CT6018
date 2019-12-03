@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/TreeMobile.unity
+    guid: b4498f252d6415e4dafa3a6435b3537a
   m_configObjects: {}

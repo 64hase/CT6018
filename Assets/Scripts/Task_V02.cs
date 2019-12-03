@@ -20,7 +20,7 @@ public class Task_V02 : MonoBehaviour
     [SerializeField] private Button TaskCompleteButton;
     private Tasks_V02_List TasksV02List;
 
-    private void start()
+    private void Start()
     {
         OnUpdateFromObjectName();
         TaskCompleteButton.onClick.AddListener(OnTaskComplete);
@@ -58,6 +58,7 @@ public class Task_V02 : MonoBehaviour
     }
     private void OnTaskComplete()
     {
+        Debug.Log("Task has received OnTaskCOmplete()");
         TasksV02List.OnTaskComplete(this.gameObject);
     }
 }

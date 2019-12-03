@@ -4,12 +4,23 @@ using UnityEngine;
 
 public class TaskManager : MonoBehaviour
 {
+    public static TaskManager Instance;
+
     [SerializeField] private bool CleanOnStart;
     public List<string> TaskArray = new List<string>();
+
     private int TaskNumber
     {
         get { return PlayerPrefs.GetInt("TaskNumber"); }
         set { PlayerPrefs.SetInt("TaskNumber", value); }
+    }
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this);
     }
 
     public void OnTaskAdded()

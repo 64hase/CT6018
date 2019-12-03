@@ -26,6 +26,7 @@ public class Tasks_V02_List : MonoBehaviour
     [SerializeField] private Button UpdateNameButton;
     [SerializeField] private Text TasksLeft;
     private GameObject TaskRef;
+    [SerializeField] private List<string> TasksArchive;
 
     private void Awake()
     {
@@ -89,12 +90,23 @@ public class Tasks_V02_List : MonoBehaviour
     //if one exists in the stack but doesn't in the new task data then delete that task from the stack
     public void OnTaskComplete(GameObject Task)
     {
-        TaskRef = Task;
+        Debug.Log("TaskV02List has received OnTaskCOmplete()");
         string TaskName = Task.gameObject.name.ToString();
-        LeanTween.delayedCall(4F, DestroyTask);
+        LeanTween.delayedCall(1F, DestroyTask);
+        TasksArchive.Add(PlayerPrefs.GetString(Task.gameObject.name));
+        OnTaskArchiveCreate();
+        PlayerPrefs.DeleteKey(Task.gameObject.name);
+        TaskRef = Task;
     }
     private void DestroyTask()
     {
         GameObject.Destroy(TaskRef);
+    }
+    private void OnTaskArchiveCreate()
+    {
+        for (int i = 0; i < TasksArchive.Count; i++)
+        {
+            PlayerPrefs.SetString("ArchivedTask_" + i, TasksArchive[i]);
+        }
     }
 }

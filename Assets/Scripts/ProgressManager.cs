@@ -52,8 +52,19 @@ public class ProgressManager : MonoBehaviour
     // Update the progress of the player
     public void UpdateProgress()
     {
+        float initialProgress = Progress;
         Progress = Progress + TaskValue;
-        ProgressBarFill.fillAmount = Progress / ProgressAim;
+
+
+
+        //ProgressBarFill.fillAmount = Progress / ProgressAim;
+        LeanTween.value(ProgressBarFill.gameObject, ProgressBarFill.fillAmount, Progress / ProgressAim, 1F).setOnUpdate((float value) =>
+        {
+            ProgressBarFill.fillAmount = value;
+        });
+
+
+
         ProgressBarText.text = string.Format(Progress + "/" + ProgressAim);
 
         if (Progress >= ProgressAim)

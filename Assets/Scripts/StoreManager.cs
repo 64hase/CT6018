@@ -12,7 +12,7 @@ public class StoreManager : MonoBehaviour
     [SerializeField] private Button StoreAccessButton;
     [SerializeField] private CanvasGroup StoreCanvasGroup;
     [SerializeField] private GameObject StoreItemGameObject;
-    [SerializeField] private Button StoreAlert;
+    [SerializeField] private Image StoreAlert;
     [SerializeField] private GameObject[] PlayerTreeHat;
     private Vector3 HatScale;
 

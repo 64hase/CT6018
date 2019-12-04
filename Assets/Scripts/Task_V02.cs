@@ -18,11 +18,13 @@ public class Task_V02 : MonoBehaviour
     [SerializeField] private Color PriorityMediumColour;
     [SerializeField] private Color PriorityLowColour;
     [SerializeField] private Button TaskCompleteButton;
+    private ProgressManager ProgressManager;
     private Tasks_V02_List TasksV02List;
     private TaskList TaskList;
 
     private void Start()
     {
+        ProgressManager = EventSystem.current.GetComponent<ProgressManager>();
         OnUpdateFromObjectName();
         TaskCompleteButton.onClick.AddListener(OnTaskComplete);
         TasksV02List = EventSystem.current.GetComponent<Tasks_V02_List>();
@@ -35,6 +37,7 @@ public class Task_V02 : MonoBehaviour
         Priority.text = TaskInfoSplit[2];
         StarCount.text = TaskInfoSplit[3];
         DueDate.text = TaskInfoSplit[4];
+        Debug.Log("oioi - " + this.gameObject.name + ": " + TaskDescription.text + "," + Priority.text + "," + StarCount.text + "," + DueDate.text);
     }
     public void OnTaskUpdate(string TaskDescriptionUpdate, string DateTimeUpdate, string PriorityUpdate, int StarCountUpdate, string DueDateUpdate)
     {
@@ -61,6 +64,7 @@ public class Task_V02 : MonoBehaviour
     private void OnTaskComplete()
     {
         Debug.Log("Task has received OnTaskCOmplete()");
+        ProgressManager.UpdateProgress();
         TaskList.archivesize++;
         TasksV02List.OnTaskComplete(this.gameObject);
     }

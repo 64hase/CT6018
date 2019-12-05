@@ -5,6 +5,8 @@ using UnityEngine;
 public class OpenCloseWindows : MonoBehaviour
 {
     private Canvas TargetCanvasRef;
+
+    //Opens the referenced canvas with fade
     public void OnWindowOpen(Canvas TargetCanvas)
     {
         TargetCanvasRef = TargetCanvas;
@@ -18,6 +20,8 @@ public class OpenCloseWindows : MonoBehaviour
             LeanTween.alphaCanvas(CanvasAlpha, 1, 0.1F);
         }
     }
+
+    //Closes referenced canvas with fade
     public void OnWindowClose(Canvas TargetCanvas)
     {
         TargetCanvasRef = TargetCanvas;
@@ -30,6 +34,7 @@ public class OpenCloseWindows : MonoBehaviour
             LeanTween.delayedCall(0.1F, OnObjectSetActiveFalse);
         }
     }
+    //Sets object active status back to false once fade animation duration is up.
     private void OnObjectSetActiveFalse()
     {
         TargetCanvasRef.GetComponent<Canvas>().sortingOrder = 0;

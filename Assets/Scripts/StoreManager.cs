@@ -24,6 +24,7 @@ public class StoreManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        //Sets variables on start
         OpenCloseWindows = EventSystem.current.GetComponent<OpenCloseWindows>();
         StoreCanvas = StoreGameObject.GetComponent<Canvas>();
         StoreGameObject.SetActive(false);
@@ -36,25 +37,27 @@ public class StoreManager : MonoBehaviour
     }
     private void OnClickOpen()
     {
+        //Sets hat scale for when store is opened.
         LeanTween.cancel(StoreItemGameObject);
         PlayerStage = EventSystem.current.GetComponent<ProgressManager>().PlayerStage;
         HatScale = PlayerTreeHat[PlayerStage].transform.localScale;
         OpenCloseWindows.OnWindowOpen(StoreCanvas);
         LeanTween.delayedCall(1f, DelayedScaleDown);
     }
-    private void OnClickClose()
-    {
-        LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(HatScale.x,HatScale.y,HatScale.z), 1.0F).setEaseOutElastic().setDelay(1f);
-        OpenCloseWindows.OnWindowClose(StoreCanvas);
-    }
-
     private void DelayedScaleDown()
     {
         LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(0, 0, 0), 0F);
     }
+    private void OnClickClose()
+    {
+        //Scales hat back up once store is closed.
+        LeanTween.scale(PlayerTreeHat[PlayerStage], new Vector3(HatScale.x,HatScale.y,HatScale.z), 1.0F).setEaseOutElastic().setDelay(1f);
+        OpenCloseWindows.OnWindowClose(StoreCanvas);
+    }
 
     private void Update()
     {
+        //Animates store alert if the player can afford an item in the store
         if (StoreItemGameObject.GetComponent<Store_Item>().CanAfford == true)
         {
             if (AnimationIsPlaying == false)
@@ -73,15 +76,4 @@ public class StoreManager : MonoBehaviour
             }
         }
     }
-    /*private void SetAnimCounter()
-    {
-        LeanTween.rotateZ(StoreAlert.gameObject, -20, 0.5F);
-        LeanTween.rotateZ(StoreAlert.gameObject, 20, 0.5F).setDelay(0.5F);
-        LeanTween.rotateZ(StoreAlert.gameObject, -20, 0.5F).setDelay(1F);
-        LeanTween.rotateZ(StoreAlert.gameObject, 20, 0.5F).setDelay(1.5F);
-        LeanTween.rotateZ(StoreAlert.gameObject, -20, 0.5F).setDelay(2.0F);
-        LeanTween.rotateZ(StoreAlert.gameObject, 20, 0.5F).setDelay(2.5F);
-        LeanTween.rotateZ(StoreAlert.gameObject, 0, 0.5F).setDelay(3.0F);
-        LeanTween.delayedCall(3F, SetAnimCounter);
-    }*/
 }

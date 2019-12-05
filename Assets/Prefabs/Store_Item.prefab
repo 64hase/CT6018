@@ -57,10 +57,10 @@ MonoBehaviour:
   StoreItemNumber: 0
   HatPrice: 0
   HatMesh: {fileID: 0}
-  PurchaseButton: {fileID: 0}
-  ButtonText: {fileID: 0}
+  PurchaseButton: {fileID: 797365066690784442}
+  ButtonText: {fileID: 797365066868265315}
   HatSprite: {fileID: 0}
-  StoreImage: {fileID: 0}
+  StoreImage: {fileID: 797365066242743383}
   ResetOwnership: 0
   HatArray:
   - {fileID: 0}

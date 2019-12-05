@@ -852,6 +852,10 @@ MonoBehaviour:
   PriorityMediumColour: {r: 1, g: 0.8862745, b: 0.5058824, a: 1}
   PriorityLowColour: {r: 0.44313726, g: 0.92156863, b: 0.45882353, a: 1}
   TaskCompleteButton: {fileID: 6240861232692854994}
+  TaskV02ListCanvas: {fileID: 2469280153478891986, guid: 03d3c922f5222fa49acdfaa9068b0b3d,
+    type: 3}
+  TaskListGameObject: {fileID: 8252573296186748970, guid: 8266b96cb6db4184bb6a72d22aa2480f,
+    type: 3}
 --- !u!114 &7910529252218855276
 MonoBehaviour:
   m_ObjectHideFlags: 0

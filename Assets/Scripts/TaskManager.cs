@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TaskManager : MonoBehaviour
 {
+    //Used for viewing current task information in editor
     public static TaskManager Instance;
 
     [SerializeField] private bool CleanOnStart;
@@ -17,6 +18,7 @@ public class TaskManager : MonoBehaviour
 
     private void Awake()
     {
+        //Ensures this is the only instance.
         if (Instance == null)
             Instance = this;
         else
@@ -25,6 +27,7 @@ public class TaskManager : MonoBehaviour
 
     public void OnTaskAdded()
     {
+        //Creates an array of all the current tasks
         TaskArray.Clear();
         for (int i = 0; i < TaskNumber; i++)
         {
@@ -32,16 +35,12 @@ public class TaskManager : MonoBehaviour
         }
         if(CleanOnStart)
         {
+            //Clears all task playerpref data on start if enabled.
             for (int i = 0; i < 30; i++)
             {
                 PlayerPrefs.DeleteKey("Task_" + i);
                 PlayerPrefs.SetInt("TaskNumber", 0);
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }

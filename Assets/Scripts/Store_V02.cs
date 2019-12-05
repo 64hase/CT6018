@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Button_Test : MonoBehaviour
+public class Store_V02 : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

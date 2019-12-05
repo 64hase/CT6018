@@ -16,7 +16,7 @@ public class CurrencyCounterManager : MonoBehaviour
     [SerializeField] private bool ResetOnStartup;
     [SerializeField] private bool CoinMaintenanceEnabled;
     [SerializeField] private bool GemMaintenanceEnabled;
-    // Start is called before the first frame update
+    // On start, set all the values of the counters based on conditions
     private void Start()
     {
         PlayerPrefs.GetInt("PlayerCoinAmount", 0);
@@ -28,37 +28,37 @@ public class CurrencyCounterManager : MonoBehaviour
         }
         if (CoinMaintenanceEnabled == false)
         {
-            CoinCounterText.GetComponent<UnityEngine.UI.Text>().text = "" + PlayerPrefs.GetInt("PlayerCoinAmount");
+            CoinCounterText.text = "" + PlayerPrefs.GetInt("PlayerCoinAmount");
             CoinPanel.GetComponent<Image>().color = DefaultColor;
         }
         if (CoinMaintenanceEnabled == true)
         {
-            CoinCounterText.GetComponent<UnityEngine.UI.Text>().text = "";
+            CoinCounterText.text = "";
             CoinPanel.GetComponent<Image>().color = MaintenanceColour;
         }
 
         if (GemMaintenanceEnabled == false)
         {
-            GemCounterText.GetComponent<UnityEngine.UI.Text>().text = "" + PlayerPrefs.GetInt("PlayerGemAmount");
+            GemCounterText.text = "" + PlayerPrefs.GetInt("PlayerGemAmount");
             CoinPanel.GetComponent<Image>().color = DefaultColor;
         }
         if (GemMaintenanceEnabled == true)
         {
-            GemCounterText.GetComponent<UnityEngine.UI.Text>().text = "";
+            GemCounterText.text = "";
             GemPanel.GetComponent<Image>().color = MaintenanceColour;
         }
     }
 
-    // Update is called once per frame
+    // Continuously sets the value so that if teh values changes it remains updated.
     private void Update()
     {
         if (CoinMaintenanceEnabled == false)
         {
-            CoinCounterText.GetComponent<UnityEngine.UI.Text>().text = "" + PlayerPrefs.GetInt("PlayerCoinAmount");
+            CoinCounterText.GetComponent<UnityEngine.UI.Text>().text = PlayerPrefs.GetInt("PlayerCoinAmount").ToString();
         }
         if (GemMaintenanceEnabled == false)
         {
-            GemCounterText.GetComponent<UnityEngine.UI.Text>().text = "" + PlayerPrefs.GetInt("PlayerGemAmount");
+            GemCounterText.GetComponent<UnityEngine.UI.Text>().text = PlayerPrefs.GetInt("PlayerGemAmount").ToString();
         }
     }
 

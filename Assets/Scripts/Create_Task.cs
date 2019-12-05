@@ -13,42 +13,43 @@ public class Create_Task : MonoBehaviour
     [SerializeField] private Text Year;
     [SerializeField] private Text Hour;
     [SerializeField] private Text Minute;
-    private string DueDate;
     [SerializeField] private Button LowPriority;
     [SerializeField] private Button MediumPriority;
     [SerializeField] private Button HighPriority;
-    private string Priority;
     [SerializeField] private string TaskPlayerPrefExport;
-    private int StarCount = 0;
-    private int TaskNumber
-    {
-        get { return PlayerPrefs.GetInt("TaskNumber"); }
-        set { PlayerPrefs.SetInt("TaskNumber", value); }
-    }
     [SerializeField] private Button CreateButton;
     [SerializeField] private Button CancelButton;
     [SerializeField] private Canvas TaskCreateCanvas;
     [SerializeField] private string TaskDueDate;
     [SerializeField] private string[] SetDueDateToCurrent;
-    private TimeSpan TaskTimeSpan;
     [SerializeField] private Text OneStarHours;
     [SerializeField] private Text TwoStarsHours;
     [SerializeField] private Text ThreeStarsHours;
     [SerializeField] private Button[] ValueChangingButtons;
     [SerializeField] private Button OpenCreateTask;
+    [SerializeField] private GameObject Tasks_V02_List;
     private GameObject[] TaskItems;
     public string[] TaskInfoSplit;
-    // Start is called before the first frame update
+    private TimeSpan TaskTimeSpan;
+    private int StarCount = 0;
+    private string Priority;
+    private string DueDate;
+    private int TaskNumber
+    {
+        get { return PlayerPrefs.GetInt("TaskNumber"); }
+        set { PlayerPrefs.SetInt("TaskNumber", value); }
+    }
+
+    // Adds listeners to buttons
+    // Set create button to inactive at start
+    // Runs OnTaskDueDate and OnSetDueDateToCurrent
     private void Start()
     {
         CreateButton.onClick.AddListener(OnTaskSaveData);
         CancelButton.onClick.AddListener(OnTaskCreateClose);
-        OpenCreateTask.onClick.AddListener(OnTaskCreateOpen);
         LowPriority.onClick.AddListener(() => OnTaskPrioritySet(1));
         MediumPriority.onClick.AddListener(() => OnTaskPrioritySet(2));
         HighPriority.onClick.AddListener(() => OnTaskPrioritySet(3));
-        OnTaskDueDateSet();
-        OnSetDueDateToCurrent();
         for (int i = 0; i < ValueChangingButtons.Length; i++)
         {
             ValueChangingButtons[i].onClick.AddListener(OnValueChanged);
@@ -56,13 +57,15 @@ public class Create_Task : MonoBehaviour
         }
         TaskItems = GameObject.FindGameObjectsWithTag("Task");
         CreateButton.interactable = false;
-        OpenCreateTask.onClick.AddListener(OnTaskCreateOpen);
+        OnTaskDueDateSet();
     }
+    //On the create tasks window being enabled, the duedate is set to current and the current inputted data is checked.
     private void OnEnable()
     {
         OnSetDueDateToCurrent();
         OnCheckData();
     }
+    // Sets the due date field to the current date and time
     private void OnSetDueDateToCurrent()
     {
         string CurrentDateTime;
@@ -76,11 +79,13 @@ public class Create_Task : MonoBehaviour
         Hour.text = SetDueDateToCurrent[3];
         Minute.text = SetDueDateToCurrent[4];
     }
+    //Sets the due date for saving to playerprefs
     private void OnTaskDueDateSet()
     {
         DueDate = Day.text + "/" + Month.text + "/" + Year.text + " " + Hour.text + ":" + Minute.text;
         TaskDueDate = DateTime.Parse(DueDate).ToString();
     }
+    //Sets the priority based on the user's input
     private void OnTaskPrioritySet(int value)
     {
         if (value == 1)
@@ -96,6 +101,7 @@ public class Create_Task : MonoBehaviour
             Priority = "High";
         }
     }
+    //On the user changing a value in the due date, this sets the star hour requirements.
     private void OnValueChanged()
     {
         OnTaskDueDateSet();
@@ -108,6 +114,7 @@ public class Create_Task : MonoBehaviour
         ThreeStarsHours.text = TaskHoursThird.ToString();
 
     }
+    //On user input being detected, the current data is checked to see if its viable as a task. Then enables create button if viable.
     private void OnCheckData()
     {
         OnTaskDueDateSet();
@@ -130,6 +137,7 @@ public class Create_Task : MonoBehaviour
         }
     }
 
+    //Upon pressing create, this saves the inputted data in a string format to playerprefs. Then spawns a new task item in task list with the new task information
     private void OnTaskSaveData()
     {
         OnTaskDueDateSet();
@@ -139,7 +147,7 @@ public class Create_Task : MonoBehaviour
             TaskPlayerPrefExport = TaskDescriptionText.text + "," + DateTime.Now.ToShortDateString() + "," + Priority + "," + StarCount.ToString() + "," + DueDate;
             PlayerPrefs.SetString("Task_" + TaskNumber, TaskPlayerPrefExport);
             TaskInfoSplit = TaskPlayerPrefExport.Split(',');
-            EventSystem.current.GetComponent<Tasks_V02_List>().SpawnTask(TaskNumber);
+            Tasks_V02_List.GetComponent<Tasks_V02_List>().SpawnTask(TaskNumber);
             OnTaskCreateClose();
             //TaskItems[TaskNumber].GetComponent<Task_V02>().OnTaskUpdate(TaskInfoSplit[0], TaskInfoSplit[1], TaskInfoSplit[2], TaskInfoSplit[3], TaskInfoSplit[4]);
         }
@@ -148,10 +156,8 @@ public class Create_Task : MonoBehaviour
             Debug.Log("Task ID already exists!");
         }
     }
-    private void OnTaskCreateOpen()
-    {
-        EventSystem.current.GetComponent<OpenCloseWindows>().OnWindowOpen(TaskCreateCanvas);
-    }
+
+    //For closing the create tasks window.
     private void OnTaskCreateClose()
     {
         EventSystem.current.GetComponent<OpenCloseWindows>().OnWindowClose(TaskCreateCanvas);

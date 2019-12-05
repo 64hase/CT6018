@@ -21,6 +21,8 @@ public class ColourOperator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Sets listeners and checks which object type the gameobject that this script is attached to is.
+        //Updates colours
         EventSystemGameObject = EventSystem.current.gameObject;
         DarkModeEnabled = ColourManager.Instance.DarkModeEnabled;
         NightModeButton = ColourManager.Instance.NightModeButton;
@@ -50,9 +52,11 @@ public class ColourOperator : MonoBehaviour
 
     private void OnDestroy()
     {
+        //On being destroyed, reset colour of object
         ColourManager.DarkModeChanged -= OnColourUpdate;
     }
 
+    //Updates all the colours of on dark mode being enabled or disabled.
     public void OnColourUpdate()
     {
         Debug.Log("OnColourUpdate has been evoked!");

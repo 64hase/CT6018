@@ -7,10 +7,15 @@ using UnityEngine.EventSystems;
 public class ProgressManager : MonoBehaviour
 {
     [SerializeField]private GameObject[] TreeArray;
-
+    [SerializeField] private Image ProgressBarFill;
+    [SerializeField] private Text ProgressBarText;
+    [SerializeField] private bool UseDefaults;
     public const string KEY_PROGRESS = "Progress";
     public const string KEY_PROGRESSAIM = "ProgressAim";
     public const string KEY_PLAYERSTAGE = "PlayerStage";
+    private int TaskValue = 2;
+    private bool FirstTime;
+    public GameObject PlayerTreeGameObject;
     public float Progress
     {
         get { return PlayerPrefs.GetFloat(KEY_PROGRESS); }
@@ -27,15 +32,7 @@ public class ProgressManager : MonoBehaviour
         set { PlayerPrefs.SetInt(KEY_PLAYERSTAGE, value); }
     }
 
-    [SerializeField] private Image ProgressBarFill;
-    [SerializeField] private Text ProgressBarText;
-    [SerializeField] private bool UseDefaults;
-    private int TaskValue = 2;
-    private bool FirstTime;
-    public GameObject PlayerTreeGameObject;
-
-
-    // Start is called before the first frame update
+    // Resets to default values if enabled for testing, then updates the progress bar.
     private void Start()
     {
         if(UseDefaults == true)
@@ -57,16 +54,17 @@ public class ProgressManager : MonoBehaviour
 
 
 
-        //ProgressBarFill.fillAmount = Progress / ProgressAim;
+        //Animates the updating of the progress bar to the new progress value.
         LeanTween.value(ProgressBarFill.gameObject, ProgressBarFill.fillAmount, Progress / ProgressAim, 1F).setOnUpdate((float value) =>
         {
             ProgressBarFill.fillAmount = value;
         });
 
 
-
+        //Updates progress bar text
         ProgressBarText.text = string.Format(Progress + "/" + ProgressAim);
 
+        //Initiates a TreeGrowthEvent if the progress of the player matches their aim.
         if (Progress >= ProgressAim)
         {
             TreeGrowthEvent();
@@ -78,6 +76,7 @@ public class ProgressManager : MonoBehaviour
 
     void TreeGrowthEvent()
     {
+        //Updates the tree to the next stage tree.
         TreeArray[PlayerStage].SetActive(false);
         PlayerStage = PlayerStage + 1;
         TreeArray[PlayerStage].SetActive(true);

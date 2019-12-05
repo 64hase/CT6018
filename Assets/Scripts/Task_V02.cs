@@ -18,6 +18,8 @@ public class Task_V02 : MonoBehaviour
     [SerializeField] private Color PriorityMediumColour;
     [SerializeField] private Color PriorityLowColour;
     [SerializeField] private Button TaskCompleteButton;
+    [SerializeField] private GameObject TaskV02ListCanvas;
+    [SerializeField] private GameObject TaskListGameObject;
     private ProgressManager ProgressManager;
     private Tasks_V02_List TasksV02List;
     private TaskList TaskList;
@@ -27,8 +29,8 @@ public class Task_V02 : MonoBehaviour
         ProgressManager = EventSystem.current.GetComponent<ProgressManager>();
         OnUpdateFromObjectName();
         TaskCompleteButton.onClick.AddListener(OnTaskComplete);
-        TasksV02List = EventSystem.current.GetComponent<Tasks_V02_List>();
-        TaskList = EventSystem.current.GetComponent<TaskList>();
+        TasksV02List = TaskV02ListCanvas.GetComponent<Tasks_V02_List>();
+        TaskList = TaskListGameObject.GetComponent<TaskList>();
     }
     public void OnUpdateFromObjectName()
     {
@@ -63,7 +65,7 @@ public class Task_V02 : MonoBehaviour
     }
     private void OnTaskComplete()
     {
-        Debug.Log("Task has received OnTaskCOmplete()");
+        //When task is completed, update the progress and archive. Then initiate task complete in Task list v02 script.
         ProgressManager.UpdateProgress();
         TaskList.archivesize++;
         TasksV02List.OnTaskComplete(this.gameObject);

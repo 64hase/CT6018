@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class ColourManager : MonoBehaviour
 {
-    //singleton
     public static ColourManager Instance;
 
     [SerializeField] public Color UI_Primary_Colour_LIGHT;
@@ -31,6 +30,7 @@ public class ColourManager : MonoBehaviour
 
     private void Awake()
     {
+        //Sets instance to this if no reference can be found on awake, otheriwse, destroy this.
         if (Instance == null)
             Instance = this;
         else
@@ -40,30 +40,14 @@ public class ColourManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Sets listeners for buttons
         NightModeButtonComponent = NightModeButton.GetComponent<Button>();
 
         NightModeButtonComponent.onClick.AddListener(() => SetDarkMode(!DarkModeEnabled));
-        NightModeButtonComponent.onClick.AddListener(OnSkyboxChange);
     }
-    private void OnSkyboxChange()
-    {
-        float lerp = Mathf.PingPong(Time.time, 1.0F) / 1.0F;
-        if (DarkModeEnabled)
-        {
-            Debug.Log("Working skybox alteration!");
-            RenderSettings.skybox.SetColor("_SkyTint", colorStartDARK);
-            RenderSettings.skybox.SetColor("_Ground", colorEndDARK);
-
-        }
-        else
-        {
-            RenderSettings.skybox.SetColor("_SkyTint", colorStartLIGHT);
-            RenderSettings.skybox.SetColor("_Ground", colorEndLIGHT);
-        }
-    }
-
     private void SetDarkMode(bool on)
     {
+        //Enables darkmode
         DarkModeEnabled = on;
         DarkModeChanged?.Invoke();
     }

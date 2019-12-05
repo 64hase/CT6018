@@ -52,20 +52,6 @@ public class ProgressBar : MonoBehaviour
         }
 
     }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        //int tree - store this in player prefs
-        //tree[]
-        //tree = 3;
-        //tree++;
-        //currentTree = tree[tree]
-        //tree = tree + 1;
-
-        
-    }
-
     public void UpdateProgress()
     {
         //Controls the fill of the progress bar based on the player's progress and progress aim
@@ -84,6 +70,7 @@ public class ProgressBar : MonoBehaviour
 
     private void TreeGrowthEvent()
     {
+        //Disables current tree and enables next tree after stagenumber has been increased.
         Tree[Stagenumber].SetActive(false);
         Stagenumber = Stagenumber + 1;
         Tree[Stagenumber].SetActive(true);

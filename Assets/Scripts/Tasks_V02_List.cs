@@ -9,6 +9,16 @@ public class Tasks_V02_List : MonoBehaviour
 {
     [SerializeField] private GameObject TaskstackBase;
     [SerializeField] private Stack Taskstackster;
+    [SerializeField] private Button TaskUpdateButton;
+    [SerializeField] private RectTransform content;
+    [SerializeField] private GameObject[] TaskListObjs;
+    [SerializeField] private Button UpdateNameButton;
+    [SerializeField] private Text TasksLeft;
+    [SerializeField] private List<string> TasksArchive;
+    [SerializeField] private GameObject MinimizedObjects;
+    [SerializeField] private Button MinimizeButton;
+    [SerializeField] private Button CreateTaskButton;
+    [SerializeField] private GameObject PlayerCameraController;
     private int TaskNumber
     {
         get { return PlayerPrefs.GetInt("TaskNumber"); }
@@ -19,20 +29,18 @@ public class Tasks_V02_List : MonoBehaviour
     private GameObject TaskPriority;
     public int TaskV02Number;
     private Text TaskStarCount;
-    [SerializeField] private Button TaskUpdateButton;
-    public int spawnedTaskElements = 0;
-    [SerializeField] private RectTransform content;
-    [SerializeField] private GameObject[] TaskListObjs;
-    [SerializeField] private Button UpdateNameButton;
-    [SerializeField] private Text TasksLeft;
+    private bool Minimized = false;
     private GameObject TaskRef;
-    [SerializeField] private List<string> TasksArchive;
+    public int spawnedTaskElements = 0;
 
+    //On Awake, creates the stack
     private void Awake()
     {
         Taskstackster = new Stack();
     }
-    // Start is called before the first frame update
+    // On start, spawns enough tasks that equate to the number of tasks the player has saved in playerprefs.
+    // Sets the taks data of each task based on info from playerprefs
+    //Applies listeners for buttons
     private void Start()
     {
         OnUpdateByName();
@@ -41,22 +49,27 @@ public class Tasks_V02_List : MonoBehaviour
             SpawnTask(i);
         }
         UpdateNameButton.onClick.AddListener(OnUpdateByName);
+        MinimizeButton.onClick.AddListener(OnMinimize);
     }
+    //Used to remove an item from the stack
     public void PopTaskButton()
     {
         GameObject temp;
         temp = (GameObject)Taskstackster.Pop();
         GameObject.Destroy(temp);
     }
+    //Spawns a task into the stack
     public void SpawnTask(int elementNumber)
     {
         if (spawnedTaskElements >= TaskNumber)
         {
+            //If the limit has been reached for the stack, then an error message is produced.
             Debug.Log("Stack limit has been reached!");
             return;
         }
         else
         {
+            //Otherwise, spawn a task with information from playerprefs.
             spawnedTaskElements++;
             GameObject instantiatedStackElement = Instantiate(TaskstackBase, content);
             instantiatedStackElement.name = "Task_" + spawnedTaskElements;
@@ -72,6 +85,7 @@ public class Tasks_V02_List : MonoBehaviour
 
     private void OnUpdateByName()
     {
+        //Updates the task items based on playerprefs that contain the same name
         TasksLeft.text = TaskNumber + " left";
         EventSystem.current.GetComponent<TaskManager>().OnTaskAdded();
         TaskListObjs = GameObject.FindGameObjectsWithTag("Task");
@@ -89,7 +103,6 @@ public class Tasks_V02_List : MonoBehaviour
     //if one exists in the stack but doesn't in the new task data then delete that task from the stack
     public void OnTaskComplete(GameObject Task)
     {
-        Debug.Log("TaskV02List has received OnTaskComplete()");
         string TaskName = Task.gameObject.name.ToString();
         LeanTween.delayedCall(1F, DestroyTask);
         TasksArchive.Add(PlayerPrefs.GetString(Task.gameObject.name));
@@ -107,5 +120,52 @@ public class Tasks_V02_List : MonoBehaviour
         {
             PlayerPrefs.SetString("ArchivedTask_" + i, TasksArchive[i]);
         }
+    }
+    //Minimizes the tasks panel 
+    private void OnMinimize()
+    {
+        //Creates the variables required for minimizing the task panel
+        float Anchorpos;
+        float Scale;
+        Vector3 CameraControllerPos;
+        float CameraSize;
+
+        //Sets the values required for minimizing the task panel based on if the panel is currently minimized or not
+        if (Minimized == true)
+        {
+            Anchorpos = -700F;
+            Minimized = false;
+            Scale = 1;
+            CameraControllerPos = new Vector3(0, 8.32F, 0);
+            CameraSize = 8.1F;
+            CameraSize = 8.1F;
+        }
+        else
+        {
+            Anchorpos = -1981F;
+            Minimized = true;
+            Scale = 0;
+            CameraControllerPos = new Vector3(0, 14.1F, 0);
+            CameraSize = 6.1F;
+        }
+
+        //Moves the task panel down into a minimized state
+        RectTransform panelRect = (RectTransform)MinimizedObjects.transform;
+        LeanTween.value(gameObject, panelRect.anchoredPosition.y, Anchorpos, 0.5f).setOnUpdate((float value) =>
+        {
+            panelRect.anchoredPosition = new Vector2(panelRect.anchoredPosition.x, value);
+        }).setEase(LeanTweenType.easeOutSine);
+
+        //Scales down the create task button if minimizing, then scales it up if expanding task panel
+        LeanTween.scale(CreateTaskButton.gameObject, new Vector3(Scale, Scale, Scale), 0.5f).setEase(LeanTweenType.easeOutSine);
+
+        //Sets Camera othorgraphic size 
+        LeanTween.value(gameObject, PlayerCameraController.GetComponentInChildren<Camera>().orthographicSize, CameraSize, 0.5f).setOnUpdate((float value) =>
+        {
+            PlayerCameraController.GetComponentInChildren<Camera>().orthographicSize = CameraSize;
+        }).setEase(LeanTweenType.easeOutSine);
+
+        //Moves camera up for centralising the pillar and tree
+        LeanTween.move(PlayerCameraController.gameObject, CameraControllerPos, 0.5f).setEase(LeanTweenType.easeOutSine);
     }
 }

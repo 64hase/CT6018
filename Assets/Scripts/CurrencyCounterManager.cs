@@ -24,7 +24,7 @@ public class CurrencyCounterManager : MonoBehaviour
 
         if (ResetOnStartup == true)
         {
-            PlayerPrefs.SetInt("PlayerCoinAmount", 0);
+            PlayerPrefs.SetInt("PlayerCoinAmount", 500);
         }
         if (CoinMaintenanceEnabled == false)
         {

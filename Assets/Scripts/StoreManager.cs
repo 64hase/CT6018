@@ -15,7 +15,6 @@ public class StoreManager : MonoBehaviour
     [SerializeField] private Image StoreAlert;
     [SerializeField] private GameObject[] PlayerTreeHat;
     private Vector3 HatScale;
-
     private bool AnimationIsPlaying = false;
     private GameObject PlayerTree;
     private int PlayerStage;

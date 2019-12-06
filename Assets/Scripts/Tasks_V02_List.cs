@@ -17,6 +17,9 @@ public class Tasks_V02_List : MonoBehaviour
     [SerializeField] private List<string> TasksArchive;
     [SerializeField] private GameObject MinimizedObjects;
     [SerializeField] private Button MinimizeButton;
+    [SerializeField] private Image MinimizeButtonImg;
+    [SerializeField] private Sprite PointUpSprite;
+    [SerializeField] private Sprite PointDownSprite;
     [SerializeField] private Button CreateTaskButton;
     [SerializeField] private GameObject PlayerCameraController;
     private int TaskNumber
@@ -32,6 +35,7 @@ public class Tasks_V02_List : MonoBehaviour
     private bool Minimized = false;
     private GameObject TaskRef;
     public int spawnedTaskElements = 0;
+    public bool IsStore;
 
     //On Awake, creates the stack
     private void Awake()
@@ -122,13 +126,14 @@ public class Tasks_V02_List : MonoBehaviour
         }
     }
     //Minimizes the tasks panel 
-    private void OnMinimize()
+    public void OnMinimize()
     {
         //Creates the variables required for minimizing the task panel
         float Anchorpos;
         float Scale;
         Vector3 CameraControllerPos;
         float CameraSize;
+        MinimizeButtonImg.sprite = PointUpSprite;
 
         //Sets the values required for minimizing the task panel based on if the panel is currently minimized or not
         if (Minimized == true)
@@ -139,13 +144,14 @@ public class Tasks_V02_List : MonoBehaviour
             CameraControllerPos = new Vector3(0, 8.32F, 0);
             CameraSize = 8.1F;
             CameraSize = 8.1F;
+            MinimizeButtonImg.sprite = PointDownSprite;
         }
         else
         {
-            Anchorpos = -1981F;
+            if (IsStore == true) { Anchorpos = -2500F; } else { Anchorpos = -1981F; }
             Minimized = true;
             Scale = 0;
-            CameraControllerPos = new Vector3(0, 14.1F, 0);
+            CameraControllerPos = new Vector3(0, 11.5F, 0);
             CameraSize = 6.1F;
         }
 

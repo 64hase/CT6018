@@ -21,6 +21,7 @@ public class ProgressBar : MonoBehaviour
     [SerializeField] private GameObject Tree01;
     [SerializeField] private GameObject Tree02;
     [SerializeField] private GameObject Tree03;
+    [SerializeField] private Text TreeStageNumber;
 
     //Stage number used to track the stage the player is currently on
     public int Stagenumber = 0;
@@ -40,6 +41,7 @@ public class ProgressBar : MonoBehaviour
             ProgressAim = 10;
             Stagenumber = 0;
         }
+        TreeStageNumber.text = Stagenumber.ToString();
 
     }
     public void UpdateProgress()
@@ -65,6 +67,7 @@ public class ProgressBar : MonoBehaviour
         //Disables current tree and enables next tree after stagenumber has been increased.
         Tree[Stagenumber].SetActive(false);
         Stagenumber = Stagenumber + 1;
+        TreeStageNumber.text = Stagenumber.ToString();
         Tree[Stagenumber].SetActive(true);
     }
 }

@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class UnityAdCaller : MonoBehaviour
 {
     private int OpenWindowCount;
+
+    private UnityAction callbackOnComplete;
+
 public void PlayAd()
     {
         UnityAdsManager.Instance.ShowRegularAd(OnAdClosed);
     }
-    public void PlayRewardedAd()
+    public void PlayRewardedAd(UnityAction actionOnComplete)
     {
+        callbackOnComplete = actionOnComplete;
         UnityAdsManager.Instance.ShowRewardedAd(OnRewardedAdClosed);
     }
     private void OnAdClosed(ShowResult result)
@@ -25,6 +30,7 @@ public void PlayAd()
         switch (result)
         {
             case ShowResult.Finished:
+                callbackOnComplete?.Invoke();
                 Debug.Log("Ad Finished, reward player");
                 break;
             case ShowResult.Skipped:
@@ -42,5 +48,10 @@ public void PlayAd()
         {
             PlayAd();
         }
+    }
+
+    public void ShowRewardAdForChristmasHat()
+    {
+        PlayRewardedAd(() => { Debug.Log("Given player christmas hat"); });
     }
 }

@@ -11,6 +11,8 @@ public class ProgressManager : MonoBehaviour
     [SerializeField] private Text ProgressBarText;
     [SerializeField] private bool UseDefaults;
     [SerializeField] private Camera PlayerCamera;
+    [SerializeField] private Text StageNumber;
+    [SerializeField] private Image LockIcon;
     public const string KEY_PROGRESS = "Progress";
     public const string KEY_PROGRESSAIM = "ProgressAim";
     public const string KEY_PLAYERSTAGE = "PlayerStage";
@@ -24,7 +26,7 @@ public class ProgressManager : MonoBehaviour
     }
     public float ProgressAim
     {
-        get { return PlayerPrefs.GetFloat(KEY_PROGRESSAIM); }
+        get { return PlayerPrefs.GetFloat(KEY_PROGRESSAIM, 10); }
         set { PlayerPrefs.SetFloat(KEY_PROGRESSAIM, value); }
     }
     public int PlayerStage
@@ -56,6 +58,10 @@ public class ProgressManager : MonoBehaviour
     // Resets to default values if enabled for testing, then updates the progress bar.
     private void Start()
     {
+        if (PlayerStage == 0)
+        {
+            ProgressAim = 10;
+        }
         if(UseDefaults == true)
         {
             for (int i = 0; i < TreeArray.Length; i++)
@@ -63,18 +69,34 @@ public class ProgressManager : MonoBehaviour
                 TreeArray[i].SetActive(false);
             }
             TreeArray[0].SetActive(true);
-            Progress = 8;
+            Progress = 0;
             ProgressAim = 10;
             PlayerStage = 0;
             TaskNumber = 0;
             LowPriorityTaskCount = 0;
             NormalPriorityTaskCount = 0;
             HighPriorityTaskCount = 0;
+            PlayerPrefs.DeleteAll();
         }
         OnAdjustCameraSize();
         ProgressBarFill.fillAmount = Progress / ProgressAim;
         ProgressBarText.text = string.Format(Progress + "/" + ProgressAim);
+        for (int i = 0; i < TreeArray.Length; i++)
+        {
+            TreeArray[i].SetActive(false);
+        }
         TreeArray[PlayerStage].SetActive(true);
+        if(PlayerStage >= 3)
+        {
+            StageNumber.gameObject.SetActive(false);
+            LockIcon.gameObject.SetActive(true);
+        }
+        else
+        {
+            StageNumber.gameObject.SetActive(true);
+            LockIcon.gameObject.SetActive(false);
+            StageNumber.text = (PlayerStage + 1).ToString();
+        }
     }
 
     // Update the progress of the player
@@ -83,6 +105,7 @@ public class ProgressManager : MonoBehaviour
         float initialProgress = Progress;
         Progress = Progress + TaskValue;
         TaskNumber = TaskNumber - 1;
+        PlayerPrefs.SetInt("PlayerCoinAmount", PlayerPrefs.GetInt("PlayerCoinAmount", 0) + 5);
 
         //Animates the updating of the progress bar to the new progress value.
         LeanTween.value(ProgressBarFill.gameObject, ProgressBarFill.fillAmount, Progress / ProgressAim, 1F).setOnUpdate((float value) =>
@@ -98,7 +121,7 @@ public class ProgressManager : MonoBehaviour
         if (Progress >= ProgressAim)
         {
             TreeGrowthEvent();
-            ProgressAim = ProgressAim + ProgressAim / 2;
+            ProgressAim = ProgressAim * 2;
             ProgressBarFill.fillAmount = Progress / ProgressAim;
             ProgressBarText.text = string.Format(Progress + "/" + ProgressAim);
         }
@@ -107,14 +130,22 @@ public class ProgressManager : MonoBehaviour
     private void TreeGrowthEvent()
     {
         //Updates the tree to the next stage tree.
-        TreeArray[PlayerStage].SetActive(false);
+        LeanTween.scale(TreeArray[PlayerStage], new Vector3(0, 0, 0), 1F).setEaseInBounce();
+        LeanTween.delayedCall(1F, OnDelayedSetActiveFalse);
         PlayerStage = Mathf.Clamp(PlayerStage + 1, 0, 3);
+        StageNumber.text = (PlayerStage + 1).ToString();
+        LeanTween.scale(TreeArray[PlayerStage], new Vector3(0, 0, 0), 0F);
         TreeArray[PlayerStage].SetActive(true);
+        LeanTween.scale(TreeArray[PlayerStage], new Vector3(5, 5, 5), 1F).setEaseInBounce();
         TreeArray[PlayerStage].GetComponent<Animator>();
         Debug.Log("TreeGrowthEvent occured");
         PlayerTreeGameObject = TreeArray[PlayerStage].gameObject;
         PlayerTreeGameObject.GetComponentInChildren<Hat_Interaction>().SetTreeScale();
         OnAdjustCameraSize();
+    }
+    private void OnDelayedSetActiveFalse()
+    {
+        TreeArray[PlayerStage-1].SetActive(false);
     }
     private void OnAdjustCameraSize()
     {

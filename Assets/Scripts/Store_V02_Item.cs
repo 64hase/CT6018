@@ -15,6 +15,8 @@ public class Store_V02_Item : MonoBehaviour
     private Mesh StoreItemMesh;
     private int Price;
     private Material aHatMaterial;
+    [SerializeField] private bool IsRewardedAdPurchase = false;
+    private UnityAdCaller UnityAdCallerref;
     private int PlayerCoins
     {
         get { return PlayerPrefs.GetInt("PlayerCoinAmount"); }
@@ -22,6 +24,7 @@ public class Store_V02_Item : MonoBehaviour
     }
     private void Start()
     {
+        UnityAdCallerref = EventSystem.current.GetComponent<UnityAdCaller>();
         OnSetButtonState();
         StoreItemImage.GetComponent<Button>().onClick.AddListener(OnImagePress);
         Store_V02 = EventSystem.current.GetComponent<Store_V02>();
@@ -37,9 +40,17 @@ public class Store_V02_Item : MonoBehaviour
         if (OwnsHat == true)
         { StoreItemPrice.text = "Select"; }
         else
-        { StoreItemPrice.text = HatPrice.ToString(); }
+        {
+            if (IsRewardedAdPurchase == true)
+            {
+                StoreItemPrice.text = "AD";
+            }
+            else
+            {
+                StoreItemPrice.text = HatPrice.ToString();
+            }
+        }
         PurchaseButton.onClick.AddListener(OnStoreButtonPress);
-
     }
     private void OnImagePress()
     {
@@ -82,6 +93,15 @@ public class Store_V02_Item : MonoBehaviour
         else
         //If not owned, either purchase the hat if the player has enough coins or shake to indicate that this item cannot be afforded
         {
+            if (IsRewardedAdPurchase == true)
+            {
+                UnityAdCallerref.PlayRewardedAd(() => { OwnsHatBool = true; });
+                OwnsHatBool = true;
+                PlayerPrefs.SetInt("OwnsHat_" + StoreItemMesh.name, 1);
+                OnStoreButtonPress();
+                Store_V02.ResetHat = false;
+            }
+
             if (PlayerCoins >= Price)
             {
                 Debug.Log("Can afford hat");

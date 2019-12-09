@@ -90,7 +90,7 @@ public class Tasks_V02_List : MonoBehaviour
     //Spawns a task into the stack
     public void SpawnTask(int elementNumber)
     {
-        if (spawnedTaskElements >= TaskNumber)
+        if (spawnedTaskElements > TaskNumber)
         {
             //If the limit has been reached for the stack, then an error message is produced.
             Debug.Log("Stack limit has been reached!");

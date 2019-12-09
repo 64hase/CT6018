@@ -36,7 +36,6 @@ public class OpenCloseWindows : MonoBehaviour
         TargetCanvasRef = TargetCanvas;
         if (TargetCanvas.isActiveAndEnabled == true)
         {
-            TargetCanvas.GetComponent<Canvas>().sortingOrder = 0;
             Debug.Log("Closing window" + TargetCanvas.name);
             CanvasGroup CanvasAlpha = TargetCanvas.GetComponent<CanvasGroup>();
             CanvasAlpha.alpha = 1;

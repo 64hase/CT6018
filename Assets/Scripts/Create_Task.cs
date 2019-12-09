@@ -71,6 +71,7 @@ public class Create_Task : MonoBehaviour
     //On the create tasks window being enabled, the duedate is set to current and the current inputted data is checked.
     private void OnEnable()
     {
+        TaskDescriptionText.text = string.Empty;
         OnSetDueDateToCurrent();
         OnCheckData();
         OnValueChanged();

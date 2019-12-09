@@ -47,7 +47,5 @@ public class PieChart : MonoBehaviour
         PieChartLayer03.color = PieChart03Colour;
         PieChartSeg03KeyColour.color = PieChart03Colour;
         PieChartseg03KeyText.text = Value3Name;
-
-        Debug.Log("hello!!");
     }
 }

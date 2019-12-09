@@ -6,19 +6,26 @@ using UnityEngine.UI;
 public class ColourManager : MonoBehaviour
 {
     public static ColourManager Instance;
-
+    [Space(10)]
+    [Header("Light Mode Colours")]
     [SerializeField] public Color UI_Primary_Colour_LIGHT;
     [SerializeField] public Color UI_Secondary_Colour_LIGHT;
     [SerializeField] public Color UI_Text_LIGHT;
     [SerializeField] public ColorBlock UI_Button_LIGHT;
     [SerializeField] public Color colorStartLIGHT;
     [SerializeField] public Color colorEndLIGHT;
+    [Space(10)]
+    [Header("Dark Mode Colours")]
+    [Header("_____________________________________________________")]
     [SerializeField] public Color UI_Primary_Colour_DARK;
     [SerializeField] public Color UI_Secondary_Colour_DARK;
     [SerializeField] public Color UI_Text_DARK;
     [SerializeField] public ColorBlock UI_Button_DARK;
     [SerializeField] public Color colorStartDARK;
     [SerializeField] public Color colorEndDARK;
+    [Space(10)]
+    [Header("Misc.")]
+    [Header("_____________________________________________________")]
     [SerializeField] public bool DarkModeEnabled;
     [SerializeField] public GameObject NightModeButton;
     [SerializeField] public ColourOperator ColourOperatorScript;

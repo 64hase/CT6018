@@ -727,10 +727,10 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 39efb690-9803-4010-b2fc-96fc2b1c82f8
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: CT6018_TreeApp_Project
+  organizationId: unity_qi8dohv9fg2nyg
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

@@ -1,14 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class OpenCloseWindows : MonoBehaviour
 {
     private Canvas TargetCanvasRef;
+    public int OpenCount = 0;
+    private UnityAdCaller UnityAdCaller;
 
+    private void Start()
+    {
+       UnityAdCaller = EventSystem.current.GetComponent<UnityAdCaller>();
+    }
     //Opens the referenced canvas with fade
     public void OnWindowOpen(Canvas TargetCanvas)
     {
+        UnityAdCaller.OnShowInterstital();
+        OpenCount++;
         TargetCanvasRef = TargetCanvas;
         if (TargetCanvas.isActiveAndEnabled == false)
         {

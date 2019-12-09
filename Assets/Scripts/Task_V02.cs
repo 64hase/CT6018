@@ -20,6 +20,21 @@ public class Task_V02 : MonoBehaviour
     [SerializeField] private Button TaskCompleteButton;
     [SerializeField] private GameObject TaskV02ListCanvas;
     [SerializeField] private GameObject TaskListGameObject;
+    private int LowPriorityTaskCount
+    {
+        get { return PlayerPrefs.GetInt("LowPriorityTaskCount", 0); }
+        set { PlayerPrefs.SetInt("LowPriorityTaskCount", value); }
+    }
+    private int NormalPriorityTaskCount
+    {
+        get { return PlayerPrefs.GetInt("NormalPriorityTaskCount", 0); }
+        set { PlayerPrefs.SetInt("NormalPriorityTaskCount", value); }
+    }
+    private int HighPriorityTaskCount
+    {
+        get { return PlayerPrefs.GetInt("HighPriorityTaskCount", 0); }
+        set { PlayerPrefs.SetInt("HighPriorityTaskCount", value); }
+    }
     private ProgressManager ProgressManager;
     private Tasks_V02_List TasksV02List;
     private TaskList TaskList;
@@ -34,12 +49,11 @@ public class Task_V02 : MonoBehaviour
     }
     public void OnUpdateFromObjectName()
     {
-        string[] TaskInfoSplit = PlayerPrefs.GetString(this.gameObject.name).Split(',');
-        TaskDescription.text = TaskInfoSplit[0];
-        Priority.text = TaskInfoSplit[2];
-        StarCount.text = TaskInfoSplit[3];
-        DueDate.text = TaskInfoSplit[4];
-        Debug.Log("oioi - " + this.gameObject.name + ": " + TaskDescription.text + "," + Priority.text + "," + StarCount.text + "," + DueDate.text);
+        string[] TaskInfoSplit = PlayerPrefs.GetString(this.gameObject.name.ToString()).Split(',');
+        TaskDescription.text = TaskInfoSplit.Length > 1 ? TaskInfoSplit[0] : "Null";
+        Priority.text = TaskInfoSplit.Length > 2 ? TaskInfoSplit[2] : "Null";
+        StarCount.text = TaskInfoSplit.Length > 3 ? TaskInfoSplit[3] : "Null";
+        DueDate.text = TaskInfoSplit.Length > 4 ? TaskInfoSplit[4] : "Null";
     }
     public void OnTaskUpdate(string TaskDescriptionUpdate, string DateTimeUpdate, string PriorityUpdate, int StarCountUpdate, string DueDateUpdate)
     {
@@ -53,14 +67,17 @@ public class Task_V02 : MonoBehaviour
         if (Priority.text == "High")
         {
             PriorityPanel.color = PriorityHighColour;
+            HighPriorityTaskCount = HighPriorityTaskCount + 1;
         }
-        if (Priority.text == "Medium")
+        if (Priority.text == "Normal")
         {
             PriorityPanel.color = PriorityMediumColour;
+            NormalPriorityTaskCount = NormalPriorityTaskCount + 1;
         }
         if (Priority.text == "Low")
         {
             PriorityPanel.color = PriorityLowColour;
+            LowPriorityTaskCount = LowPriorityTaskCount + 1;
         }
     }
     private void OnTaskComplete()
@@ -69,5 +86,18 @@ public class Task_V02 : MonoBehaviour
         ProgressManager.UpdateProgress();
         TaskList.archivesize++;
         TasksV02List.OnTaskComplete(this.gameObject);
+        if (Priority.text == "High")
+        {
+            HighPriorityTaskCount = HighPriorityTaskCount - 1;
+        }
+        if (Priority.text == "Normal")
+        {
+            Debug.Log("Normal text set");
+            NormalPriorityTaskCount = NormalPriorityTaskCount - 1;
+        }
+        if (Priority.text == "Low")
+        {
+            LowPriorityTaskCount = LowPriorityTaskCount - 1;
+        }
     }
 }

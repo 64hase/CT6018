@@ -59,7 +59,6 @@ public class ColourOperator : MonoBehaviour
     //Updates all the colours of on dark mode being enabled or disabled.
     public void OnColourUpdate()
     {
-        Debug.Log("OnColourUpdate has been evoked!");
         DarkModeEnabled = ColourManager.Instance.DarkModeEnabled;
 
         Text textComp = GetComponent<Text>();

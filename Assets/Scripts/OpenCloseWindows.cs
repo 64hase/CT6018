@@ -12,12 +12,12 @@ public class OpenCloseWindows : MonoBehaviour
         TargetCanvasRef = TargetCanvas;
         if (TargetCanvas.isActiveAndEnabled == false)
         {
-            TargetCanvas.GetComponent<Canvas>().sortingOrder = 5;
+            TargetCanvas.GetComponent<Canvas>().sortingOrder = 7;
             Debug.Log("Opening window" + TargetCanvas.name);
             CanvasGroup CanvasAlpha = TargetCanvas.GetComponent<CanvasGroup>();
             CanvasAlpha.alpha = 0;
             TargetCanvas.gameObject.SetActive(true);
-            LeanTween.alphaCanvas(CanvasAlpha, 1, 0.1F);
+            LeanTween.alphaCanvas(CanvasAlpha, 1, 0.5F);
         }
     }
 
@@ -27,11 +27,12 @@ public class OpenCloseWindows : MonoBehaviour
         TargetCanvasRef = TargetCanvas;
         if (TargetCanvas.isActiveAndEnabled == true)
         {
+            TargetCanvas.GetComponent<Canvas>().sortingOrder = 0;
             Debug.Log("Closing window" + TargetCanvas.name);
             CanvasGroup CanvasAlpha = TargetCanvas.GetComponent<CanvasGroup>();
             CanvasAlpha.alpha = 1;
             LeanTween.alphaCanvas(CanvasAlpha, 0, 0.5F);
-            LeanTween.delayedCall(0.1F, OnObjectSetActiveFalse);
+            LeanTween.delayedCall(0.5F, OnObjectSetActiveFalse);
         }
     }
     //Sets object active status back to false once fade animation duration is up.

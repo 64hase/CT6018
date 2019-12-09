@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TaskManager : MonoBehaviour
 {
     //Used for viewing current task information in editor
     public static TaskManager Instance;
+    private string[] DateToCheck;
+    private TimeSpan Difference;
 
     [SerializeField] private bool CleanOnStart;
     public List<string> TaskArray = new List<string>();
@@ -23,6 +26,7 @@ public class TaskManager : MonoBehaviour
             Instance = this;
         else
             Destroy(this);
+        OnTaskAdded();
     }
 
     public void OnTaskAdded()

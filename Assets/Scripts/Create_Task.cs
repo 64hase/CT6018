@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
+using System.Threading;
 
 public class Create_Task : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class Create_Task : MonoBehaviour
     [SerializeField] private Button CreateButton;
     [SerializeField] private Button CancelButton;
     [SerializeField] private Canvas TaskCreateCanvas;
-    [SerializeField] private string TaskDueDate;
+    [SerializeField] private DateTime TaskDueDate;
     [SerializeField] private string[] SetDueDateToCurrent;
     [SerializeField] private Text OneStarHours;
     [SerializeField] private Text TwoStarsHours;
@@ -34,10 +35,19 @@ public class Create_Task : MonoBehaviour
     private int StarCount = 0;
     private string Priority;
     private string DueDate;
+    private TaskManager TaskManager;
     private int TaskNumber
     {
         get { return PlayerPrefs.GetInt("TaskNumber"); }
         set { PlayerPrefs.SetInt("TaskNumber", value); }
+    }
+    private DateTime OneStarDate;
+    private DateTime TwoStarDate;
+    private DateTime ThreeStarDate;
+
+    private void Awake()
+    {
+        Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-GB");
     }
 
     // Adds listeners to buttons
@@ -45,25 +55,25 @@ public class Create_Task : MonoBehaviour
     // Runs OnTaskDueDate and OnSetDueDateToCurrent
     private void Start()
     {
+        //DateTime.
+
         CreateButton.onClick.AddListener(OnTaskSaveData);
         CancelButton.onClick.AddListener(OnTaskCreateClose);
         LowPriority.onClick.AddListener(() => OnTaskPrioritySet(1));
         MediumPriority.onClick.AddListener(() => OnTaskPrioritySet(2));
         HighPriority.onClick.AddListener(() => OnTaskPrioritySet(3));
-        for (int i = 0; i < ValueChangingButtons.Length; i++)
-        {
-            ValueChangingButtons[i].onClick.AddListener(OnValueChanged);
-            ValueChangingButtons[i].onClick.AddListener(OnCheckData);
-        }
         TaskItems = GameObject.FindGameObjectsWithTag("Task");
         CreateButton.interactable = false;
+        OnSetDueDateToCurrent();
         OnTaskDueDateSet();
+        TaskManager = EventSystem.current.GetComponent<TaskManager>();
     }
     //On the create tasks window being enabled, the duedate is set to current and the current inputted data is checked.
     private void OnEnable()
     {
         OnSetDueDateToCurrent();
         OnCheckData();
+        OnValueChanged();
     }
     // Sets the due date field to the current date and time
     private void OnSetDueDateToCurrent()
@@ -83,7 +93,7 @@ public class Create_Task : MonoBehaviour
     private void OnTaskDueDateSet()
     {
         DueDate = Day.text + "/" + Month.text + "/" + Year.text + " " + Hour.text + ":" + Minute.text;
-        TaskDueDate = DateTime.Parse(DueDate).ToString();
+        TaskDueDate = DateTime.Parse(DueDate);
     }
     //Sets the priority based on the user's input
     private void OnTaskPrioritySet(int value)
@@ -102,23 +112,25 @@ public class Create_Task : MonoBehaviour
         }
     }
     //On the user changing a value in the due date, this sets the star hour requirements.
-    private void OnValueChanged()
+    public void OnValueChanged()
     {
         OnTaskDueDateSet();
-        TaskTimeSpan = DateTime.Parse(DueDate) - DateTime.Now;
-        float TaskHours = (float)TaskTimeSpan.TotalSeconds / 3600;
-        float TaskHoursThird = Mathf.Clamp(Mathf.Ceil(TaskHours / 3), 0, 999);
-        float TaskHoursTenth = Mathf.Clamp(Mathf.Ceil(TaskHours / 10), 0, 999);
-        OneStarHours.text = (TaskHoursThird * 2) + (TaskHoursTenth * 2) + "+  hrs";
-        TwoStarsHours.text = ((TaskHoursThird * 2) - TaskHoursTenth) + " - " + ((TaskHoursThird * 2) + TaskHoursTenth) + " hrs";
-        ThreeStarsHours.text = TaskHoursThird.ToString();
-
+        TaskTimeSpan = TaskDueDate.Subtract(DateTime.Now);
+        float ThreeStarHourCount = Mathf.Ceil(Mathf.Clamp((float.Parse((TaskTimeSpan.TotalHours * 0.25).ToString())), 0, 999));
+        float TwoStarHourCount = Mathf.Ceil(Mathf.Clamp((float.Parse((TaskTimeSpan.TotalHours * 0.5).ToString())), 0, 999));
+        float OneStarHourCount = Mathf.Ceil(Mathf.Clamp((float.Parse((TaskTimeSpan.TotalHours * 0.75).ToString())), 0, 999));
+        OneStarHours.text = "< " + OneStarHourCount + "  hrs";
+        TwoStarsHours.text = "< " + TwoStarHourCount + " hrs";
+        ThreeStarsHours.text = "< " + ThreeStarHourCount + " hrs";
+        OneStarDate = DateTime.Now.AddHours(OneStarHourCount);
+        TwoStarDate = DateTime.Now.AddHours(TwoStarHourCount);
+        ThreeStarDate = DateTime.Now.AddHours(ThreeStarHourCount);
     }
     //On user input being detected, the current data is checked to see if its viable as a task. Then enables create button if viable.
-    private void OnCheckData()
+    public void OnCheckData()
     {
         OnTaskDueDateSet();
-        TaskPlayerPrefExport = TaskDescriptionText.text + "," + DateTime.Now.ToShortDateString() + "," + Priority + "," + StarCount.ToString() + "," + DueDate;
+        TaskPlayerPrefExport = TaskDescriptionText.text + "," + DateTime.Now.ToShortDateString() + "," + Priority + "," + StarCount.ToString() + "," + DueDate + "," + OneStarDate + "," + TwoStarDate + "," + ThreeStarDate;
         if (string.IsNullOrEmpty(TaskPlayerPrefExport[0].ToString()) == false)
         {
             if (string.IsNullOrEmpty(TaskPlayerPrefExport[1].ToString()) == false)
@@ -144,12 +156,12 @@ public class Create_Task : MonoBehaviour
         TaskNumber = Mathf.Clamp((TaskNumber + 1), 1, 1000);
         if (PlayerPrefs.HasKey("Task_" + TaskNumber) == false)
         {
-            TaskPlayerPrefExport = TaskDescriptionText.text + "," + DateTime.Now.ToShortDateString() + "," + Priority + "," + StarCount.ToString() + "," + DueDate;
+            TaskPlayerPrefExport = TaskDescriptionText.text + "," + DateTime.Now.ToShortDateString() + "," + Priority + "," + StarCount.ToString() + "," + DueDate + "," + OneStarDate.ToString() + "," + TwoStarDate.ToString() + "," + ThreeStarDate.ToString();
             PlayerPrefs.SetString("Task_" + TaskNumber, TaskPlayerPrefExport);
             TaskInfoSplit = TaskPlayerPrefExport.Split(',');
             Tasks_V02_List.GetComponent<Tasks_V02_List>().SpawnTask(TaskNumber);
             OnTaskCreateClose();
-            //TaskItems[TaskNumber].GetComponent<Task_V02>().OnTaskUpdate(TaskInfoSplit[0], TaskInfoSplit[1], TaskInfoSplit[2], TaskInfoSplit[3], TaskInfoSplit[4]);
+            TaskManager.OnTaskAdded();
         }
         else
         {
@@ -161,5 +173,9 @@ public class Create_Task : MonoBehaviour
     private void OnTaskCreateClose()
     {
         EventSystem.current.GetComponent<OpenCloseWindows>().OnWindowClose(TaskCreateCanvas);
+        if(TaskNumber > 6)
+        {
+            Tasks_V02_List.GetComponent<Tasks_V02_List>().OnBottomShadow();
+        }
     }
 }

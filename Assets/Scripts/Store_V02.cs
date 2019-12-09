@@ -8,6 +8,7 @@ public class Store_V02 : MonoBehaviour
 {
     [SerializeField] private Sprite[] Sprites;
     [SerializeField] private int[] Prices;
+    [SerializeField] private Material[] HatMaterials;
     [SerializeField] private Mesh[] Hats;
     [SerializeField] private Button StoreExitButton;
     [SerializeField] private Button StoreAccessButton;
@@ -26,6 +27,7 @@ public class Store_V02 : MonoBehaviour
     private bool CanAfford;
     public bool ResetHat;
     private Mesh HatToSetTo;
+    private Material MaterialToSetTo;
     private int PlayerCoins
     {
         get { return PlayerPrefs.GetInt("PlayerCoinAmount"); }
@@ -46,7 +48,7 @@ public class Store_V02 : MonoBehaviour
             //Creates a OwnsHat bool, then checks to see if the hat is owned by the player, then set data for the storeitem.
             bool OwnsHat;
             if (PlayerPrefs.GetInt("OwnsHat_" + Hats[i].name) == 1) { OwnsHat = true; } else { OwnsHat = false; }
-            StoreItems[i].GetComponent<Store_V02_Item>().OnSetStoreData(Sprites[i], Hats[i], Prices[i], OwnsHat);
+            StoreItems[i].GetComponent<Store_V02_Item>().OnSetStoreData(Sprites[i], Hats[i], Prices[i], OwnsHat, HatMaterials[i]);
         }
     }
 
@@ -59,6 +61,7 @@ public class Store_V02 : MonoBehaviour
         LeanTween.delayedCall(1f, DelayedScaleDown);
         Task_V02_List.IsStore = true;
         HatToSetTo = PlayerTreeHat[PlayerStage].GetComponent<MeshFilter>().mesh;
+        MaterialToSetTo = PlayerTreeHat[PlayerStage].GetComponent<MeshRenderer>().material;
         OnMinimize();
     }
     private void DelayedScaleDown()
@@ -80,6 +83,7 @@ public class Store_V02 : MonoBehaviour
     private void OnResetHat()
     {
         PlayerTreeHat[PlayerStage].GetComponent<MeshFilter>().mesh = HatToSetTo;
+        PlayerTreeHat[PlayerStage].GetComponent<MeshRenderer>().material = MaterialToSetTo;
         ResetHat = false;
     }
     private void OnMinimize()

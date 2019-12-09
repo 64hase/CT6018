@@ -14,6 +14,7 @@ public class Store_V02_Item : MonoBehaviour
     private bool OwnsHatBool = false;
     private Mesh StoreItemMesh;
     private int Price;
+    private Material aHatMaterial;
     private int PlayerCoins
     {
         get { return PlayerPrefs.GetInt("PlayerCoinAmount"); }
@@ -26,12 +27,13 @@ public class Store_V02_Item : MonoBehaviour
         Store_V02 = EventSystem.current.GetComponent<Store_V02>();
         PlayerHatPlaceholders = Store_V02.PlayerTreeHat;
     }
-    public void OnSetStoreData(Sprite HatSprite, Mesh HatMesh, int HatPrice, bool OwnsHat)
+    public void OnSetStoreData(Sprite HatSprite, Mesh HatMesh, int HatPrice, bool OwnsHat, Material HatMaterial)
     {
         OwnsHatBool = OwnsHat;
         Price = HatPrice;
         StoreItemImage.sprite = HatSprite;
         StoreItemMesh = HatMesh;
+        aHatMaterial = HatMaterial;
         if (OwnsHat == true)
         { StoreItemPrice.text = "Select"; }
         else
@@ -46,6 +48,7 @@ public class Store_V02_Item : MonoBehaviour
         {
             //If so, set all hat meshes to this hat
             PlayerHatPlaceholders[i].GetComponent<MeshFilter>().mesh = StoreItemMesh;
+            PlayerHatPlaceholders[i].GetComponent<MeshRenderer>().material = aHatMaterial;
         }
     }
     private void OnSetButtonState()
@@ -53,10 +56,12 @@ public class Store_V02_Item : MonoBehaviour
         if (PlayerCoins < Price)
         {
             PurchaseButton.interactable = false;
+            this.GetComponent<CanvasGroup>().alpha = 0.5F;
         }
         else
         {
             PurchaseButton.interactable = true;
+            this.GetComponent<CanvasGroup>().alpha = 1F;
         }
 
     }
@@ -65,22 +70,27 @@ public class Store_V02_Item : MonoBehaviour
         //Checks if the hat is owned by the player
         if (OwnsHatBool == true)
         {
+            StoreItemPrice.text = "Select";
             for(int i = 0; i < PlayerHatPlaceholders.Length; i++)
             {
                 //If so, set all hat meshes to this hat
                 PlayerHatPlaceholders[i].GetComponent<MeshFilter>().mesh = StoreItemMesh;
+                PlayerHatPlaceholders[i].GetComponent<MeshRenderer>().material = aHatMaterial;
+                Store_V02.ResetHat = false;
             }
         }
         else
         //If not owned, either purchase the hat if the player has enough coins or shake to indicate that this item cannot be afforded
         {
-            if (PlayerCoins >= int.Parse(StoreItemPrice.ToString()))
+            if (PlayerCoins >= Price)
             {
+                Debug.Log("Can afford hat");
                 //Button animation here
-                PlayerCoins = PlayerCoins - int.Parse(StoreItemPrice.ToString());
+                PlayerCoins = PlayerCoins - Price;
                 OwnsHatBool = true;
                 PlayerPrefs.SetInt("OwnsHat_" + StoreItemMesh.name, 1);
                 OnStoreButtonPress();
+                Store_V02.ResetHat = false;
             }
             else
             {

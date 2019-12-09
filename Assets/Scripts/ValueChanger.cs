@@ -14,9 +14,12 @@ public class ValueChanger : MonoBehaviour
     [SerializeField] private Text CurrentMonthValue;
     [SerializeField] private Text DayValue;
     private int MonthValue;
+    [SerializeField] private GameObject CreateTasksObj;
+    private Create_Task Create_Task;
     // Start is called before the first frame update
     void Start()
     {
+        Create_Task = CreateTasksObj.GetComponent<Create_Task>();
         UpButton.onClick.AddListener(OnValueChangeUp);
         DownButton.onClick.AddListener(OnValueChangeDown);
         CurrentValue = int.Parse(Value.text);
@@ -61,6 +64,8 @@ public class ValueChanger : MonoBehaviour
             }
             CurrentValue = Mathf.Clamp(CurrentValue + 1, 1, ValueLimit);
             Value.text = CurrentValue.ToString();
+        Create_Task.OnValueChanged();
+        Create_Task.OnCheckData();
     }
 
     //Action for decreasing the value
@@ -101,6 +106,8 @@ public class ValueChanger : MonoBehaviour
         }
                 CurrentValue = Mathf.Clamp(CurrentValue - 1, 1, ValueLimit);
                 Value.text = CurrentValue.ToString();
+        Create_Task.OnValueChanged();
+        Create_Task.OnCheckData();
     }
 
 }

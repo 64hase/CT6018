@@ -22,10 +22,27 @@ public class Tasks_V02_List : MonoBehaviour
     [SerializeField] private Sprite PointDownSprite;
     [SerializeField] private Button CreateTaskButton;
     [SerializeField] private GameObject PlayerCameraController;
+    [SerializeField] private Image BottomShadow;
+    [SerializeField] private GameObject TaskArchive;
     private int TaskNumber
     {
         get { return PlayerPrefs.GetInt("TaskNumber"); }
         set { PlayerPrefs.SetInt("TaskNumber", value); }
+    }
+    private int LowPriorityTaskCount
+    {
+        get { return PlayerPrefs.GetInt("LowPriorityTaskCount", 0); }
+        set { PlayerPrefs.SetInt("LowPriorityTaskCount", value); }
+    }
+    private int NormalPriorityTaskCount
+    {
+        get { return PlayerPrefs.GetInt("NormalPriorityTaskCount", 0); }
+        set { PlayerPrefs.SetInt("NormalPriorityTaskCount", value); }
+    }
+    private int HighPriorityTaskCount
+    {
+        get { return PlayerPrefs.GetInt("HighPriorityTaskCount", 0); }
+        set { PlayerPrefs.SetInt("HighPriorityTaskCount", value); }
     }
     private GameObject TaskDateText;
     private GameObject TaskDescriptionText;
@@ -36,22 +53,30 @@ public class Tasks_V02_List : MonoBehaviour
     private GameObject TaskRef;
     public int spawnedTaskElements = 0;
     public bool IsStore;
+    private int TaskArchiveSize;
+    private string[] DateToCheck;
+    private TimeSpan Difference;
+    private string TaskConstruction;
 
     //On Awake, creates the stack
     private void Awake()
     {
+        BottomShadow.enabled = false;
         Taskstackster = new Stack();
+        OnUpdateByName();
     }
     // On start, spawns enough tasks that equate to the number of tasks the player has saved in playerprefs.
     // Sets the taks data of each task based on info from playerprefs
     //Applies listeners for buttons
     private void Start()
     {
-        OnUpdateByName();
+        TaskArchiveSize = LowPriorityTaskCount + NormalPriorityTaskCount + HighPriorityTaskCount;
+        OnBottomShadow();
         for (int i = spawnedTaskElements; i < TaskNumber; i++)
         {
             SpawnTask(i);
         }
+        OnUpdateByName();
         UpdateNameButton.onClick.AddListener(OnUpdateByName);
         MinimizeButton.onClick.AddListener(OnMinimize);
     }
@@ -81,7 +106,6 @@ public class Tasks_V02_List : MonoBehaviour
             Taskstackster.Push(instantiatedStackElement);
             Task_V02 element = instantiatedStackElement.GetComponent<Task_V02>();
             string playerPrefString = "Task_" + elementNumber;
-            Debug.Log("PlayerPrefString: " + PlayerPrefs.GetString(playerPrefString));
             string[] TaskInfoSplit = PlayerPrefs.GetString(playerPrefString).Split(',');
             element.OnTaskUpdate(TaskInfoSplit[0], TaskInfoSplit.Length > 1 ? TaskInfoSplit[1] : string.Empty, TaskInfoSplit.Length > 2 ? TaskInfoSplit[2] : string.Empty, TaskInfoSplit.Length > 3 ? int.Parse(TaskInfoSplit[3]) : 0, TaskInfoSplit.Length > 4 ? TaskInfoSplit[4] : string.Empty);
         } // TaskPlayerPrefExport = TaskDescriptionText.text + "," + DateTime.Now + "," + Priority + "," + StarCount.ToString() + "," + DueDate;
@@ -89,13 +113,24 @@ public class Tasks_V02_List : MonoBehaviour
 
     private void OnUpdateByName()
     {
-        //Updates the task items based on playerprefs that contain the same name
         TasksLeft.text = TaskNumber + " left";
-        EventSystem.current.GetComponent<TaskManager>().OnTaskAdded();
-        TaskListObjs = GameObject.FindGameObjectsWithTag("Task");
-        for (int i = 0; i < TaskListObjs.Length; i++)
+        if (TaskNumber > 0)
         {
-            TaskListObjs[i].GetComponent<Task_V02>().OnUpdateFromObjectName();
+            //Updates the task items based on playerprefs that contain the same name
+            OnBottomShadow();
+            EventSystem.current.GetComponent<TaskManager>().OnTaskAdded();
+            TaskListObjs = GameObject.FindGameObjectsWithTag("Task");
+            for (int i = 1; i < TaskNumber; i++)
+            {
+                string[] PlayerprefSplit;
+                //TaskListObjs[i].GetComponent<Task_V02>().OnUpdateFromObjectName();
+                PlayerprefSplit = PlayerPrefs.GetString("Task_" + i).Split(',');
+                TaskListObjs[i].GetComponent<Task_V02>().OnTaskUpdate(PlayerprefSplit[0], PlayerprefSplit.Length > 1 ? PlayerprefSplit[1] : string.Empty, PlayerprefSplit.Length > 2 ? PlayerprefSplit[2] : string.Empty, PlayerprefSplit.Length > 3 ? int.Parse(PlayerprefSplit[3]) : 0, PlayerprefSplit.Length > 4 ? PlayerprefSplit[4] : string.Empty);
+            }
+        }
+        else
+        {
+            Debug.Log("There are no tasks");
         }
     }
     //Get all new task data
@@ -109,10 +144,44 @@ public class Tasks_V02_List : MonoBehaviour
     {
         string TaskName = Task.gameObject.name.ToString();
         LeanTween.delayedCall(1F, DestroyTask);
+
+            DateToCheck = PlayerPrefs.GetString(TaskName).Split(',');
+            Difference = DateTime.Now.Subtract(DateTime.Parse(DateToCheck[7]));
+            if (Difference.Seconds > 1)
+            {
+                Difference = DateTime.Now.Subtract(DateTime.Parse(DateToCheck[6]));
+                if (Difference.Seconds > 1)
+                {
+                    //Three stars earned
+                    TaskConstruction = DateToCheck[0] + "," + DateToCheck[1] + "," + DateToCheck[2] + "," + "3" + "," + DateToCheck[4] + "," + DateToCheck[5] + "," + DateToCheck[6] + "," + DateToCheck[7];
+                    PlayerPrefs.SetString(TaskName, TaskConstruction);
+                Debug.Log("Three stars have been earned.  " + TaskConstruction);
+                }
+                else
+                {
+                    //Two stars earned
+                    TaskConstruction = DateToCheck[0] + "," + DateToCheck[1] + "," + DateToCheck[2] + "," + "2" + "," + DateToCheck[4] + "," + DateToCheck[5] + "," + DateToCheck[6] + "," + DateToCheck[7];
+                    PlayerPrefs.SetString(TaskName, TaskConstruction);
+                Debug.Log("Two stars have been earned.  " + TaskConstruction);
+                }
+            }
+            else
+            {
+                //One stars earned
+                TaskConstruction = DateToCheck[0] + "," + DateToCheck[1] + "," + DateToCheck[2] + "," + "1" + "," + DateToCheck[4] + "," + DateToCheck[5] + "," + DateToCheck[6] + "," + DateToCheck[7];
+                PlayerPrefs.SetString(TaskName, TaskConstruction);
+            Debug.Log("One star has been earned!  " + TaskConstruction);
+            }
+
+
+
+
         TasksArchive.Add(PlayerPrefs.GetString(Task.gameObject.name));
         OnTaskArchiveCreate();
         PlayerPrefs.DeleteKey(Task.gameObject.name);
         TaskRef = Task;
+        OnBottomShadow();
+        TaskArchiveSize++;
     }
     private void DestroyTask()
     {
@@ -141,7 +210,7 @@ public class Tasks_V02_List : MonoBehaviour
             Anchorpos = -700F;
             Minimized = false;
             Scale = 1;
-            CameraControllerPos = new Vector3(0, 8.32F, 0);
+            CameraControllerPos = new Vector3(0, 9.01F, 0);
             CameraSize = 8.1F;
             CameraSize = 8.1F;
             MinimizeButtonImg.sprite = PointDownSprite;
@@ -166,12 +235,22 @@ public class Tasks_V02_List : MonoBehaviour
         LeanTween.scale(CreateTaskButton.gameObject, new Vector3(Scale, Scale, Scale), 0.5f).setEase(LeanTweenType.easeOutSine);
 
         //Sets Camera othorgraphic size 
-        LeanTween.value(gameObject, PlayerCameraController.GetComponentInChildren<Camera>().orthographicSize, CameraSize, 0.5f).setOnUpdate((float value) =>
+        Camera camera = PlayerCameraController.GetComponentInChildren<Camera>();
+
+        LeanTween.value(gameObject, camera.orthographicSize, CameraSize, 0.5f).setOnUpdate((float value) =>
         {
-            PlayerCameraController.GetComponentInChildren<Camera>().orthographicSize = CameraSize;
+            camera.orthographicSize = value;
         }).setEase(LeanTweenType.easeOutSine);
 
         //Moves camera up for centralising the pillar and tree
         LeanTween.move(PlayerCameraController.gameObject, CameraControllerPos, 0.5f).setEase(LeanTweenType.easeOutSine);
+    }
+    public void OnBottomShadow()
+    {
+        //Enables a bottom shadow if there are enough tasks that some are off screen.
+        if (TaskNumber > 6)
+        {
+            BottomShadow.enabled = true;
+        }
     }
 }

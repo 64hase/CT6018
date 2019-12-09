@@ -5,18 +5,8 @@ using UnityEngine.UI;
 
 public class ProgressBar : MonoBehaviour
 {
-    public const string KEY_PROGRESS = "Progress";
-    public const string KEY_PROGRESSAIM = "ProgressAim";
-    public float Progress
-    {
-        get { return PlayerPrefs.GetFloat(KEY_PROGRESS);  }
-        set { PlayerPrefs.SetFloat(KEY_PROGRESS, value); }
-    }
-    public float ProgressAim
-    {
-        get { return PlayerPrefs.GetFloat(KEY_PROGRESSAIM); }
-        set { PlayerPrefs.SetFloat(KEY_PROGRESSAIM, value); }
-    }
+    public float Progress;
+    public float ProgressAim;
     //For referencing the PrpgressFill Image used o the progress bar
     [SerializeField] private Image ProgressFill;
     //Use for referencing ProgressText
@@ -54,6 +44,8 @@ public class ProgressBar : MonoBehaviour
     }
     public void UpdateProgress()
     {
+        Progress = PlayerPrefs.GetFloat("Progress");
+        ProgressAim = PlayerPrefs.GetFloat("ProgressAim");
         //Controls the fill of the progress bar based on the player's progress and progress aim
         ProgressFill.fillAmount = Progress / ProgressAim;
 

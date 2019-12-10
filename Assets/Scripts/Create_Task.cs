@@ -29,6 +29,7 @@ public class Create_Task : MonoBehaviour
     [SerializeField] private Button[] ValueChangingButtons;
     [SerializeField] private Button OpenCreateTask;
     [SerializeField] private GameObject Tasks_V02_List;
+    [SerializeField] private InputField TaskInputfield;
     private GameObject[] TaskItems;
     public string[] TaskInfoSplit;
     private TimeSpan TaskTimeSpan;
@@ -69,12 +70,13 @@ public class Create_Task : MonoBehaviour
         TaskManager = EventSystem.current.GetComponent<TaskManager>();
     }
     //On the create tasks window being enabled, the duedate is set to current and the current inputted data is checked.
-    private void OnEnable()
+    public void OnReset()
     {
         TaskDescriptionText.text = string.Empty;
         OnSetDueDateToCurrent();
         OnCheckData();
         OnValueChanged();
+        TaskInputfield.text = string.Empty;
     }
     // Sets the due date field to the current date and time
     private void OnSetDueDateToCurrent()

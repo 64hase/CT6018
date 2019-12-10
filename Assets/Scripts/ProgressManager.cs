@@ -54,6 +54,7 @@ public class ProgressManager : MonoBehaviour
         get { return PlayerPrefs.GetInt("HighPriorityTaskCount", 0); }
         set { PlayerPrefs.SetInt("HighPriorityTaskCount", value); }
     }
+    [SerializeField]private GameObject TaskListObj;
 
     // Resets to default values if enabled for testing, then updates the progress bar.
     private void Start()
@@ -98,6 +99,10 @@ public class ProgressManager : MonoBehaviour
             StageNumber.text = (PlayerStage + 1).ToString();
         }
     }
+    private void Awake()
+    {
+        TaskListObj.GetComponent<Tasks_V02_List>().enabled = true;
+    }
 
     // Update the progress of the player
     public void UpdateProgress()
@@ -130,6 +135,7 @@ public class ProgressManager : MonoBehaviour
     private void TreeGrowthEvent()
     {
         //Updates the tree to the next stage tree.
+        ProgressBarFill.fillAmount = 0;
         LeanTween.scale(TreeArray[PlayerStage], new Vector3(0, 0, 0), 1F).setEaseInBounce();
         LeanTween.delayedCall(1F, OnDelayedSetActiveFalse);
         PlayerStage = Mathf.Clamp(PlayerStage + 1, 0, 3);

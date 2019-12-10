@@ -2356,17 +2356,7 @@ MonoBehaviour:
   TaskListObjs: []
   UpdateNameButton: {fileID: 2469280151364874759}
   TasksLeft: {fileID: 2469280152778697018}
-  TasksArchive:
-  - Something Something,08/12/2019,Normal,0,13/12/19 16:31
-  - Hello there!,08/12/2019,Low,0,11/12/19 13:31
-  - test,08/12/2019,Low,0,10/12/19 12:12
-  - wwwwww,08/12/2019,Normal,0,08/12/19 23:18
-  - wwwwww,08/12/2019,Normal,0,08/12/19 23:17
-  - wwwwww,08/12/2019,Normal,0,08/12/19 20:17
-  - wwwwww,08/12/2019,Normal,0,08/12/19 16:17
-  - wwwwww,08/12/2019,Normal,0,12/12/19 13:17
-  - wwwwww,08/12/2019,Normal,0,11/12/19 13:17
-  - wwwwww,08/12/2019,Normal,0,08/12/19 13:21
+  TasksArchive: []
   MinimizedObjects: {fileID: 2469280151557332691}
   MinimizeButton: {fileID: 2469280153395296632}
   MinimizeButtonImg: {fileID: 5771484613078877747}
@@ -2374,7 +2364,8 @@ MonoBehaviour:
   PointDownSprite: {fileID: 21300000, guid: 1a6ca97e2f077f843a7cacd69d56b7a1, type: 3}
   CreateTaskButton: {fileID: 2469280152704732050}
   PlayerCameraController: {fileID: 0}
-  BottomShadow: {fileID: 0}
+  BottomShadow: {fileID: 9137618432680846688}
+  TaskArchive: {fileID: 0}
   TaskV02Number: 0
   spawnedTaskElements: 0
   IsStore: 0
